@@ -1,0 +1,119 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">元素列</label>
+            <div class="col-sm-8">
+                <span id="stylePropElement" col="StylePropElement"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">字体</label>
+            <div class="col-sm-8">
+                <input id="stylePropFontFamily" col="StylePropFontFamily" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">颜色</label>
+            <div class="col-sm-8">
+                <input id="stylePropColor" col="StylePropColor" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">文字大小</label>
+            <div class="col-sm-8">
+                <input id="stylePropFontSize" col="StylePropFontSize" type="text" class="form-control" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    var styleId = ys.request("styleId");
+    $(function () {
+        $("#stylePropElement").ysComboBox({
+            data: [ 
+                { Key: 'IDCode', Value: '鉴定编号' },
+                { Key: 'CollectionName', Value: '藏品名称' },
+                { Key: 'CollectionYear', Value: '年份' },
+                { Key: 'CollectionValue', Value: '面值' },
+                { Key: 'PrintArt', Value: '印刷工艺' },
+                { Key: 'SerialCode', Value: '冠字编号' },
+                { Key: 'Rating', Value: '评分' },
+                { Key: 'RatingEnglish', Value: '评分英语释义' },
+                { Key: 'HQP', Value: 'HQP' },
+                { Key: 'StarTag', Value: '三星' },
+                { Key: 'EditionPersonalization', Value: '版别/个性化' },
+                { Key: 'EstimatedValue', Value: '估值保价' },
+                { Key: 'Rarity', Value: '珍稀度' },
+                { Key: 'IssuingUnit', Value: '发行单位' },
+                { Key: 'OS', Value: 'OS' },
+                { Key: 'Description', Value: '描述' },
+                { Key: 'Edition', Value: '版别' },
+                { Key: 'NumberCode', Value: '志号' },
+                { Key: 'Personalization', Value: '个性化' },
+                { Key: 'Material', Value: '材质' },
+                { Key: 'Weight', Value: '重量' },
+                { Key: 'Size', Value: '尺寸' }
+            ],
+            key: "Key",
+            value: "Value",
+            class: "form-control"
+        });
+
+        getForm();
+         
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/CollectionManage/PrintstyleProp/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $("#stylePropElement").ysComboBox("setValue", obj.Data.StylePropElement);
+                        $('#stylePropFontFamily').val(obj.Data.StylePropFontFamily);
+                        $('#stylePropColor').val(obj.Data.StylePropColor);
+                        $('#stylePropFontSize').val(obj.Data.StylePropFontSize);
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) { 
+       var t= $('#form').getWebControls();
+        if (t.StylePropElement == "") { 
+            ys.msgError("必须选择一个元素列");
+            return;
+        }  
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id, StyleID: styleId });
+            ys.ajax({
+                url: '@Url.Content("~/CollectionManage/PrintstyleProp/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+</script>
+

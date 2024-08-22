@@ -1,0 +1,45 @@
+﻿@using YS.Admin.Entity.BlogManage
+@using YS.Admin.Util
+@model List<DiarysEntity>
+
+
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap/3.3.7/css/bootstrap.min.css"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/fontawesome/4.7.0/css/fontawesome.min.css"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/jquery/2.1.4/jquery.min.js"))
+
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap/3.3.7/js/bootstrap.min.js"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/layer/3.1.1/layer.min.js"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/laydate/5.0.9/laydate.min.js"))
+
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/YS.Admin/css/style.min.css"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/YS.Admin/js/YS.Admin.min.js"))
+
+@{
+    ViewBag.Title = ViewBag.Site.WebName + "-日记";
+}
+
+<div class="doc-container" id="doc-container">
+    <div class="container-fixed">
+        <div class="row animated fadeInRight">
+            <div class="ibox float-e-margins">
+                <div id="ibox-content">
+                    <div id="vertical-timeline" class="vertical-container light-timeline">
+                        @foreach(var item in Model)
+                        {
+                            <div class="vertical-timeline-block">
+                                <div class="vertical-timeline-icon blue-bg">
+                                    <i class="@item.Icon"></i>
+                                </div>
+                                <div class="vertical-timeline-content">
+                                    @Html.Raw(item.Content)
+                                </div>
+                            </div>
+                        } 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

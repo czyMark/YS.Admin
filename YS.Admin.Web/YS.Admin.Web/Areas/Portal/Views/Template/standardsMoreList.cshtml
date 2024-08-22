@@ -1,0 +1,90 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/banBieBiaoZhu.css")" />
+}
+
+<div id="app3" class="wrap">
+
+    <div class="element-wrap">
+        <div class="con-main-wrap" v-for="(item,index) in data.tableList">
+            <div class="label">
+                {{item.Remarks}}
+            </div>
+            <div class="table-list-wrap">
+                <div class="title-wrap"> {{item.Title}} </div>
+                <div class="item-item flex-row" v-for="(itemi,index1) in item.Articles" :key="index1" :class="index1%2==1?'active':'' ">
+                    <div class="item-left"> {{itemi.Title}} </div>
+                    <div class="item-right">
+                            <a style="color: black;" v-for="items in itemi.ArticlesDescriptiondata" :href="greeting(items.Id)">
+                                {{items.C1}} &nbsp;
+                            </a>
+                    </div>
+                    @*
+                    <div class="item-right">
+                    <div class="item-right"> {{itemi.Title}} </div>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+    const App3 = {
+        data() {
+            return {
+                query: {
+                    total: 1000,
+                    page: 1,
+                    size: 10
+                },
+                data: {
+                    tableList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.tableList))
+                        }
+            }
+
+        },
+        methods: {
+            greeting(id) {
+                return `./ShowImage?id=${id}`;
+            }
+        },
+        mounted() {
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

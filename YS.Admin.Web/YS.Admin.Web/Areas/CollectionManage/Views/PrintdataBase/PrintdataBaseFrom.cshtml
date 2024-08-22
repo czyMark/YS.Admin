@@ -1,0 +1,215 @@
+﻿@using YS.Admin.Util
+@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+@* 引入Handsontable *@
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section header {
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/Handsontable/dist/handsontable.full.min.css"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/Handsontable/dist/handsontable.full.min.js"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/Handsontable/dist/languages/zh-CN.js"))
+}
+<style>
+    .readonly-row {
+        background-color: #000;
+    }
+</style>
+
+<div class="container-div">
+    <div class="col-sm-24   table-striped">
+        <div id="DataTableFromExcel" style="width: 100%;background-color:white"></div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        initExcelPage();
+    });
+    var pageData, filterPage, currentPageData = [{ DataState: 99, TagTypeName: "" }];
+    var totalPages = 1; // 总页数
+    var currentPage = 1; // 当前页码
+    var pageSize = 10000; // 页大小
+    var startCount = 0;//本页开始条目
+    var totalCount = 0;//总共数据量
+    var endCount = 0;//本页结束条目
+
+
+    var container = document.getElementById('DataTableFromExcel');
+    var hotExcel = new Handsontable(container, {
+        colHeaders: true,
+        columns: @Html.Raw(ViewBag.DataTableColumns),
+        height: 380,
+        data: [],
+        manualColumnMove: true,
+        manualColumnResize: true, // 启用手动调整列宽
+        contextMenu: true,
+        width: '100%',
+        stretchH: 'all',
+        cells: function (row, col) {
+            var cellProperties = {};
+
+            // 设置每列的宽度
+            if (col === 0) {
+                cellProperties.width = 30; // 分表
+                cellProperties.readOnly = true;
+                cellProperties.renderer = function (instance, td, row, col, prop, value) {
+                    Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.backgroundColor = '#f2f2f2'; // 只读变化背景
+                };
+            } else if (col === 1) {
+                cellProperties.width = 30; // ID 列
+                cellProperties.readOnly = true;
+                cellProperties.renderer = function (instance, td, row, col, prop, value) {
+                    Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.backgroundColor = '#f2f2f2'; // 只读变化背景
+                };
+            } else if (col === 3) {
+                cellProperties.readOnly = true;
+                cellProperties.renderer = function (instance, td, row, col, prop, value) {
+                    Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.backgroundColor = '#f2f2f2'; // 只读变化背景
+                };
+            }
+            return cellProperties;
+        }
+    });
+
+
+    function renderHeight() {
+
+        if (pageSize < totalCount) {
+            hotExcel.updateSettings({
+                height: pageSize * 23 + 42
+            });
+        } else {
+            if (totalCount < 15) {
+                hotExcel.updateSettings({
+                    height: 15 * 23.333 + 28
+                });
+            } else {
+                hotExcel.updateSettings({
+                    height: totalCount * 23.333 + 28
+                });
+            }
+
+        }
+
+    }
+
+    function renderPageInfo() {
+        if (filterPage.length == 0) {
+            currentPage = 0;
+            startCount = 0;
+            totalPages = 0;
+            endCount = 0;
+            totalCount = filterPage.length;
+            $("#start-count").text(startCount);
+            $("#end-count").text(endCount);
+            $("#total-count").text(totalCount);
+
+            //没有数据隐藏面板
+            $("#pagination-info-Panel").hide();
+
+
+            return;
+        } else {
+
+            //有数据显示面板
+            $("#pagination-info-Panel").show();
+        }
+
+        //渲染分页
+        startCount = (currentPage - 1) * pageSize + 1;
+        endCount = currentPage * pageSize;
+        $("#start-count").text(startCount);
+
+        //结束的超过最大的 变成最大的
+        if (endCount > filterPage.length) {
+            endCount = filterPage.length;
+        }
+        $("#end-count").text(endCount);
+
+
+        //刷新数据
+        fetchData();
+
+        //计算总计
+        totalPages = Math.ceil(filterPage.length / pageSize); // 总页数
+        totalCount = filterPage.length;
+        $("#total-count").text(totalCount);
+
+    }
+
+    function initExcelPage() {
+
+        //重新绑定数据
+        //查询临时表数据
+        var queryUrl = '@Url.Content("~/CollectionManage/PrintdataBase/GetUnLockTempPageListJson")?Id=@(ViewBag.DataTempId)';
+        ys.ajax({
+            url: queryUrl,
+            type: 'get',
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    //重新绑定数据
+                    pageData = obj.Data;
+                    filterPage = pageData;
+                    currentPage = 1; // 当前页码
+                    renderPageInfo();
+                    renderHeight();
+                }
+            }
+        });
+    }
+    //分页控件刷新数据
+    function fetchData() {
+
+
+        currentPageData = filterPage.slice(startCount - 1, endCount);
+
+        // 加载新数据
+        hotExcel.loadData(currentPageData);
+        // 重新渲染表格
+        hotExcel.render();
+    }
+    //保存数据
+    function saveNowData() {
+
+
+        //只数据是编辑状态的数据
+        var temp = [];
+        for (let i = 0; i < currentPageData.length; i++) {
+            if (currentPageData[i].DataState == 1) {
+                temp.push(currentPageData[i]);
+            }
+        }
+        if (temp.length == 0) {
+            ys.msgError("没有要保存的数据");
+            return;
+        }
+
+        //参数
+        ys.ajax({
+            url: '@Url.Content("~/CollectionManage/PrintdataBase/LockSaveFormJson")',
+            data: { SaveDataString: JSON.stringify(temp) },
+            type: 'post',
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    ys.msgSuccess(obj.Message);
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        });
+    }
+
+    function getForm() {
+    }
+    function saveForm(index) {
+        hotExcel.selectCell(0, 0);
+        saveNowData();
+        parent.layer.close(index);
+    }
+
+</script>

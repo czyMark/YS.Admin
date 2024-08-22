@@ -1,0 +1,105 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">文本话术</label>
+            <div class="col-sm-8">
+                <textarea id="details" col="Details" type="text" class="form-control"
+                    style="resize: vertical;" >
+                    </textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">鉴定机构</label>
+            <div class="col-sm-8">
+                <input id="appraisalInstitution" col="AppraisalInstitution" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">备案名称</label>
+            <div class="col-sm-8">
+                <input id="recordName" col="RecordName" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">鉴定结果</label>
+            <div class="col-sm-8">
+                <input id="identificationResult" col="IdentificationResult" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">鉴定老师1</label>
+            <div class="col-sm-8">
+                <input id="appraisal1" col="Appraisal1" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">鉴定老师2</label>
+            <div class="col-sm-8">
+                <input id="appraisal2" col="Appraisal2" type="text" class="form-control" />
+            </div>
+        </div>
+       @*   <div class="form-group">
+            <label class="col-sm-3 control-label ">公司印章</label>
+            <div class="col-sm-8">
+               
+                <input id="appraisalInstitution" col="AppraisalInstitution" type="text" class="form-control" />
+            </div>
+        </div>  *@
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    $(function () {
+        getForm();
+
+        $('#form').validate({
+            rules: {
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/SiteManage/Certificate/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $('#form').setWebControls(obj.Data);
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id });
+            ys.ajax({
+                url: '@Url.Content("~/SiteManage/Certificate/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+</script>
+

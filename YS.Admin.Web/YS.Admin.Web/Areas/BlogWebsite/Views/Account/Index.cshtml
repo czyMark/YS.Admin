@@ -1,0 +1,195 @@
+﻿@using YS.Admin.Util
+
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+
+
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap/3.3.7/css/bootstrap.min.css"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/fontawesome/4.7.0/css/fontawesome.min.css"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/jquery/2.1.4/jquery.min.js"))
+
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap/3.3.7/js/bootstrap.min.js"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/layer/3.1.1/layer.min.js"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/laydate/5.0.9/laydate.min.js"))
+
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/YS.Admin/css/YS.Admin.min.css"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/YS.Admin/js/YS.Admin-init.min.js"))
+
+@{
+    ViewBag.Title = ViewBag.Site.WebName + "-用户注册";
+}
+@section css {
+    <link rel="stylesheet" href="~/lib/BlogInfo/css/message.css" />
+}
+
+<div class="doc-container" id="doc-container">
+    <div class="container-fixed">
+        <div class="container-inner">
+            <section class="msg-remark">
+                <h1>欢迎你的登录</h1>
+                <p>
+                    留下你的足迹，让你我进一步交流
+                </p>
+            </section>
+            <div style="height:320px">
+                <div class="textarea-wrap message" id="textarea-wrap" style="width:46%;float:left;margin:6px;">
+                    <form action="">
+                        <div class="form-group">
+                            <label class="control-label ">账户名</label>
+                            <div>
+                                <input id="userName" col="UserName" type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label ">密码</label>
+                            <div>
+                                <input id="password" col="Password" type="password" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label ">验证码</label>
+                            <div>
+                                <div style="width:20%;float:left">
+                                    <input id="captchaCode" name="captchaCode" type="text" col="CaptchaCode" class="form-control code" placeholder="验证码" maxlength="3">
+                                </div>
+                                <div style="float:left">
+                                    <a href="javascript:void(0);" title="点击更换验证码">
+                                        <img id="imgCaptchaCode" src='@Url.Content("~/System/Home/GetCaptchaImage")' height="34" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="layui-form-item" style="margin-top:50px;">
+                            @if (ViewBag.Site.FeedbackStatus == "1")
+                            {
+                                <a class="layui-btn" onclick="Save()">登录</a>
+                            }
+                            else
+                            {
+                                <div style="text-align: center;">
+                                    <span>留言功能已被关闭了哟～</span>
+                                </div>
+                            }
+                        </div>
+                    </form>
+                </div>
+                <div class="textarea-wrap message" id="textarea-wrap" style="width:46%;float:right;margin:6px;">
+                    <form action="">
+                        <div class="form-group">
+                            <label class="control-label ">账户名</label>
+                            <div>
+                                <input id="ruserName" col="UserName" type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label ">密码</label>
+                            <div>
+                                <input id="rpassword" col="Password" type="password" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label ">验证码</label>
+                            <div>
+                                <div style="width:20%;float:left">
+                                    <input id="rcaptchaCode" name="captchaCode" type="text" col="CaptchaCode" class="form-control code" placeholder="验证码" maxlength="3">
+                                </div>
+                                <div style="float:left">
+                                    <a href="javascript:void(0);" title="点击更换验证码">
+                                        <img id="rimgCaptchaCode" src='@Url.Content("~/System/Home/GetCaptchaImage")' height="34" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-top:50px;">
+                            @if (ViewBag.Site.FeedbackStatus == "1")
+                            {
+                                <a class="layui-btn" onclick="Register()">注册</a>
+                            }
+                            else
+                            {
+                                <div style="text-align: center;">
+                                    <span>留言功能已被关闭了哟～</span>
+                                </div>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="textarea-wrap message" id="textarea-wrap" style="width:100%">
+                <h3>第三方登录</h3>
+                <p>
+                    简单的博客，没有开发的意愿...
+                </p>
+            </div>
+        </div> 
+
+    </div>
+</div>
+
+
+@if (ViewBag.Site.FeedbackStatus == "1")
+{
+
+    <script type="text/javascript">
+
+        $("#imgCaptchaCode").click(function () {
+            $(this).attr("src", '@Url.Content("~/System/Home/GetCaptchaImage")' + '?t=' + new Date().getTime());
+        });
+
+        $("#rimgCaptchaCode").click(function () {
+            $(this).attr("src", '@Url.Content("~/System/Home/GetCaptchaImage")' + '?t=' + new Date().getTime());
+        });
+
+        function Save() {
+            var postData = {};
+            postData.userName = $("#userName").val();
+            postData.password = $("#password").val();
+            postData.captchaCode = $("#captchaCode").val();
+            $.ajax({
+                url: '@Url.Content("~/BlogWebsite/Account/LoginJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        layer.msg(obj.Message, {
+                            icon: 1
+                        });
+                    }
+                    else {
+                        layer.msg(obj.Message, {
+                            icon: 2
+                        });
+                    }
+                }
+            });
+        }
+        function Register() {
+            var postData = {};
+            postData.userName = $("#ruserName").val();
+            postData.password = $("#rpassword").val();
+            postData.captchaCode = $("#rcaptchaCode").val();
+            $.ajax({
+                url: '@Url.Content("~/BlogWebsite/Account/RegisterJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        layer.msg(obj.message, {
+                            icon: 2
+                        });
+                    }
+                    else {
+                        layer.msg(obj.Message, {
+                            icon: 2
+                        });
+                    }
+                }
+            });
+        } 
+    </script>
+}
+
+@section js {
+    <script src="~/lib/BlogInfo/js/pagemessage.js"></script>
+}

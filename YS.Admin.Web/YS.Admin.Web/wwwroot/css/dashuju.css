@@ -1,0 +1,68 @@
+.wrap {
+    min-height: calc(100vh - 54px);
+    background-color: #f8fafa;
+}
+.con-main-wrap {
+    padding: 0;
+}
+.nei {
+    margin-top: 53px;
+    background-color: #fff;
+    padding-bottom: 64px;
+}
+.title {
+    padding: 25px 0 32px;
+    font-family: PingFang SC;
+    font-size: 25px;
+    color: #2a3d62;
+    text-align: center;
+}
+.nei .title-top {
+    background-color: #f0f6f4;
+    height: 50px;
+}
+.nei .title-top .item {
+    flex: 1;
+    text-align: center;
+    font-size: 20px;
+    color: #447f64;
+}
+.table-value-list .item {
+    background-color: #fff;
+}
+.table-value-list .item-item {
+    flex: 1;
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid #f0f0f0;
+}
+.info {
+    gap: 40px;
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #212121;
+    margin-top: 38px;
+}
+.btn {
+    width: 241px;
+    height: 63px;
+    color: #fff;
+    background: #404040;
+    border-radius: 10px;
+    font-family: PingFang SC;
+    font-size: 25px;
+    color: #ffffff;
+    line-height: 63px;
+    text-align: center;
+    margin: 30px auto;
+    cursor: pointer;
+}
+
+.xinde .item-item {
+    font-size: 16px;
+}
+.first {
+    min-width: 100px;
+}

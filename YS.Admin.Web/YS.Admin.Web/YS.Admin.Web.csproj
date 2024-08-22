@@ -1,0 +1,354 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<AssemblyVersion>6.0.0.0</AssemblyVersion>
+		<FileVersion>6.0.0.0</FileVersion>
+		<Company>YS.Admin.Web</Company>
+		<Authors>YS.Admin.Web</Authors>
+		<Product>YS.AdminAdmin</Product>
+		<Copyright>YS.AdminAdmin</Copyright>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+		<RazorCompileOnBuild>false</RazorCompileOnBuild>
+		<Nullable>enable</Nullable>
+		<RunPostBuildEvent>Always</RunPostBuildEvent>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Areas\BlogWebsite\Views\Archives\**" />
+	  <Content Remove="Areas\BlogWebsite\Views\Archives\**" />
+	  <EmbeddedResource Remove="Areas\BlogWebsite\Views\Archives\**" />
+	  <None Remove="Areas\BlogWebsite\Views\Archives\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Areas\BlogWebsite\Controllers\ArchivesController.cs" />
+	  <Compile Remove="Areas\BlogWebsite\Controllers\QQUserController.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="Areas\BlogWebsite\Views\Account\Index.cshtml" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="dotnet_run.bat">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="upload\baseCertificate.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Aliyun.OSS.SDK.NetCore" Version="2.13.0" />
+		<PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+		<PackageReference Include="jieba.NET" Version="0.42.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.4" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.4" />
+		<PackageReference Include="QRCoder" Version="1.6.0" />
+		<PackageReference Include="System.Drawing.Common" Version="8.0.7" />
+		<PackageReference Include="UEditor.Core" Version="1.0.6" />
+		<DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\YS.Admin.Business\YS.Admin.Business.AutoJob\YS.Admin.Business.AutoJob.csproj" />
+		<ProjectReference Include="..\..\YS.Admin.Business\YS.Admin.Business\YS.Admin.Business.csproj" />
+		<ProjectReference Include="..\..\YS.Admin.Data\YS.Admin.Data.EF\YS.Admin.Data.EF.csproj" />
+		<ProjectReference Include="..\..\YS.Admin.Entity\YS.Admin.Entity\YS.Admin.Entity.csproj" />
+		<ProjectReference Include="..\..\YS.Admin.Entity\YS.Admin.Model\YS.Admin.Model.csproj" />
+		<ProjectReference Include="..\..\YS.Admin.Util\YS.Admin.CodeGenerator\YS.Admin.CodeGenerator.csproj" />
+		<ProjectReference Include="..\..\YS.Admin.Util\YS.Admin.Util\YS.Admin.Util.csproj" />
+		<ProjectReference Include="..\YS.Admin.Web.Code\YS.Admin.Web.Code.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Update="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="bundleconfig.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="Views\Shared\_Layout.cshtml">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="wwwroot\YS.Admin\css\animate.css">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="wwwroot\YS.Admin\css\login.css">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="wwwroot\YS.Admin\css\skins.css">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="wwwroot\YS.Admin\css\style.css">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="wwwroot\YS.Admin\css\style.min.css">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="wwwroot\YS.Admin\css\YS.Admin.css">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="wwwroot\YS.Admin\css\YS.Admin.min.css">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Areas\BlogWebsite\ViewComponents\" />
+		<Folder Include="Areas\ShortLInk\Controllers\" />
+		<Folder Include="Areas\ShortLInk\Views\Link\" />
+		<Folder Include="Areas\System\Data\" />
+		<Folder Include="Areas\System\Models\" />
+		<Folder Include="Areas\ShortLInk\" />
+		<Folder Include="Properties\PublishProfiles\" />
+		<Folder Include="upload\Certificate\" />
+		<Folder Include="wwwroot\lib\Handsontable\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Areas\BlogWebsite\Views\About\Index.cshtml" />
+	  <None Include="Areas\BlogWebsite\Views\Account\Index.cshtml" />
+	  <None Include="Areas\BlogWebsite\Views\Article\Index.cshtml" />
+	  <None Include="Areas\BlogWebsite\Views\Diarys\Index.cshtml" />
+	  <None Include="Areas\BlogWebsite\Views\Feedback\Index.cshtml" />
+	  <None Include="Areas\BlogWebsite\Views\Home\Index.cshtml" />
+	  <None Include="Areas\BlogWebsite\Views\Links\Index.cshtml" />
+	  <None Include="Areas\BlogWebsite\Views\Shared\_Layout.cshtml" />
+	  <None Include="Areas\BlogWebsite\Views\_ViewStart.cshtml" />
+	  <None Include="wwwroot\js\axios.min.js" />
+	  <None Include="wwwroot\js\global.js" />
+	  <None Include="wwwroot\js\html2canvas.min.js" />
+	  <None Include="wwwroot\js\index.full.js" />
+	  <None Include="wwwroot\js\jquery.min.js" />
+	  <None Include="wwwroot\js\jquery.SuperSlide.2.1.1.js" />
+	  <None Include="wwwroot\js\ossupclasscoursefile.js" />
+	  <None Include="wwwroot\js\ossupimage.js" />
+	  <None Include="wwwroot\js\signalr\dist\browser\signalr.js" />
+	  <None Include="wwwroot\js\signalr\dist\browser\signalr.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\browser\signalr.min.js" />
+	  <None Include="wwwroot\js\signalr\dist\browser\signalr.min.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\AbortController.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\AbortController.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\AccessTokenHttpClient.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\AccessTokenHttpClient.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\browser-index.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\browser-index.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\DefaultHttpClient.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\DefaultHttpClient.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\DefaultReconnectPolicy.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\DefaultReconnectPolicy.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Errors.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Errors.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\FetchHttpClient.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\FetchHttpClient.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HandshakeProtocol.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HandshakeProtocol.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HeaderNames.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HeaderNames.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HttpClient.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HttpClient.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HttpConnection.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HttpConnection.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HubConnection.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HubConnection.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HubConnectionBuilder.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\HubConnectionBuilder.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\IConnection.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\IConnection.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\IHttpConnectionOptions.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\IHttpConnectionOptions.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\IHubProtocol.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\IHubProtocol.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\ILogger.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\ILogger.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\index.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\index.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\IRetryPolicy.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\IRetryPolicy.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\ITransport.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\ITransport.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\JsonHubProtocol.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\JsonHubProtocol.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Loggers.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Loggers.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\LongPollingTransport.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\LongPollingTransport.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Polyfills.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Polyfills.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\ServerSentEventsTransport.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\ServerSentEventsTransport.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Stream.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Stream.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Subject.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Subject.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\TextMessageFormat.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\TextMessageFormat.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Utils.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\Utils.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\WebSocketTransport.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\WebSocketTransport.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\XhrHttpClient.js" />
+	  <None Include="wwwroot\js\signalr\dist\cjs\XhrHttpClient.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\AbortController.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\AbortController.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\AccessTokenHttpClient.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\AccessTokenHttpClient.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\browser-index.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\browser-index.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\DefaultHttpClient.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\DefaultHttpClient.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\DefaultReconnectPolicy.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\DefaultReconnectPolicy.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Errors.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Errors.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\FetchHttpClient.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\FetchHttpClient.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HandshakeProtocol.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HandshakeProtocol.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HeaderNames.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HeaderNames.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HttpClient.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HttpClient.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HttpConnection.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HttpConnection.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HubConnection.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HubConnection.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HubConnectionBuilder.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\HubConnectionBuilder.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\IConnection.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\IConnection.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\IHttpConnectionOptions.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\IHttpConnectionOptions.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\IHubProtocol.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\IHubProtocol.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\ILogger.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\ILogger.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\index.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\index.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\IRetryPolicy.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\IRetryPolicy.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\ITransport.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\ITransport.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\JsonHubProtocol.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\JsonHubProtocol.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Loggers.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Loggers.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\LongPollingTransport.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\LongPollingTransport.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Polyfills.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Polyfills.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\ServerSentEventsTransport.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\ServerSentEventsTransport.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Stream.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Stream.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Subject.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Subject.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\TextMessageFormat.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\TextMessageFormat.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Utils.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\Utils.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\WebSocketTransport.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\WebSocketTransport.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\esm\XhrHttpClient.js" />
+	  <None Include="wwwroot\js\signalr\dist\esm\XhrHttpClient.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\webworker\signalr.js" />
+	  <None Include="wwwroot\js\signalr\dist\webworker\signalr.js.map" />
+	  <None Include="wwwroot\js\signalr\dist\webworker\signalr.min.js" />
+	  <None Include="wwwroot\js\signalr\dist\webworker\signalr.min.js.map" />
+	  <None Include="wwwroot\js\signalr\README.md" />
+	  <None Include="wwwroot\js\vue\index.full.js" />
+	  <None Include="wwwroot\js\vue\index.js" />
+	  <None Include="wwwroot\YS.Admin\exam\multipleselection.js" />
+	  <None Include="wwwroot\YS.Admin\exam\singleelection.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin-data.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin-data.min.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin-index.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin-index.min.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin-init.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin-init.min.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin-jquery-bootstrap-table-plugin.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin-jquery-bootstrap-treetable-plugin.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin-jquery-ztree-plugin.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin-plugin.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin.js" />
+	  <None Include="wwwroot\YS.Admin\js\YS.Admin.min.js" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\AbortController.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\AccessTokenHttpClient.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\browser-index.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\DefaultHttpClient.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\DefaultReconnectPolicy.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\Errors.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\FetchHttpClient.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\HandshakeProtocol.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\HeaderNames.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\HttpClient.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\HttpConnection.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\HubConnection.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\HubConnectionBuilder.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\IConnection.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\IHttpConnectionOptions.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\IHubProtocol.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\ILogger.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\index.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\IRetryPolicy.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\ITransport.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\JsonHubProtocol.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\Loggers.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\LongPollingTransport.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\Polyfills.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\ServerSentEventsTransport.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\Stream.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\Subject.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\TextMessageFormat.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\Utils.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\WebSocketTransport.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\dist\esm\XhrHttpClient.d.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\AbortController.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\AccessTokenHttpClient.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\browser-index.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\DefaultHttpClient.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\DefaultReconnectPolicy.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\Errors.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\FetchHttpClient.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\HandshakeProtocol.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\HeaderNames.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\HttpClient.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\HttpConnection.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\HubConnection.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\HubConnectionBuilder.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\IConnection.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\IHttpConnectionOptions.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\IHubProtocol.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\ILogger.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\index.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\IRetryPolicy.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\ITransport.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\JsonHubProtocol.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\Loggers.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\LongPollingTransport.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\Polyfills.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\ServerSentEventsTransport.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\Stream.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\Subject.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\TextMessageFormat.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\Utils.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\WebSocketTransport.ts" />
+	  <TypeScriptCompile Include="wwwroot\js\signalr\src\XhrHttpClient.ts" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="bundleconfig.json.bindings">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>

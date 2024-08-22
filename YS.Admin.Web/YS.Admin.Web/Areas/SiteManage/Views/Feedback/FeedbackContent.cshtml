@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+
+<div class="wrapper animated fadeInRight" style="color:black;font-size:26px" id="contentArea">
+    
+</div>
+
+<script type="text/javascript">
+    var content = ys.request("content");
+   
+    $('#contentArea').text(content);
+</script>
+

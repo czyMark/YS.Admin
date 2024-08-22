@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StackExchange.Redis" Version="2.0.600" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\YS.Admin.Util\YS.Admin.Util\YS.Admin.Util.csproj" />
+    <ProjectReference Include="..\YS.Admin.Cache.Interface\YS.Admin.Cache.Interface.csproj" />
+  </ItemGroup>
+
+</Project>

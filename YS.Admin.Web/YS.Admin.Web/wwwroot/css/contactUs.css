@@ -1,0 +1,83 @@
+.banner {
+    width: 100%;
+    height: 580px;
+}
+
+.wrap {
+    background-color: #f8fafa;
+}
+
+.nei {
+    align-items: flex-start;
+    gap: 61px;
+    padding: 68px 0 42px;
+    border-bottom: 1px solid #b3b3b3;
+}
+
+.left {
+    /* flex: 1; */
+}
+
+.left .item {
+    gap: 21px;
+    justify-content: flex-start;
+    margin-bottom: 30px;
+}
+
+.item .icon {
+    width: 40px;
+    overflow: hidden;
+}
+
+p {
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #4b4d4c;
+}
+.sssssp{
+    width: 270px;
+    height: 19px;
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #4b4d4c;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.label {
+    text-align: center;
+    font-family: Source Han Sans CN;
+    font-size: 16px;
+    color: #4b4d4c;
+    margin-top: 16px;
+}
+
+.label img {
+    width: 138px;
+    height: 138px;
+}
+
+.ditu {
+    width: 682px;
+    height: 422px;
+}
+
+.details {
+    padding: 62px 0 115px;
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #4b4d4c;
+    line-height: 40px;
+}
+
+.left .list {
+    width: 400px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-left: 32px;
+}
+
+.left .list .items {
+    width: 50%;
+    margin-bottom: 20px;
+}

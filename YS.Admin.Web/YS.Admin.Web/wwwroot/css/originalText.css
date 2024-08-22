@@ -1,0 +1,77 @@
+.banner {
+    width: 100%;
+    height: 580px;
+}
+.wrap {
+    background-color: #f8fafa;
+}
+.title {
+    margin: 63px 0 36px;
+    font-family: Source Han Sans CN;
+    font-size: 36px;
+    color: #447f64;
+    text-align: center;
+}
+.label {
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #4b4d4c;
+    line-height: 40px;
+}
+.xinde {
+    margin: 57px 0 45px;
+}
+.title-info {
+    font-family: Source Han Sans CN;
+    font-size: 24px;
+    color: #447f64;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.item-one {
+    height: 59px;
+    line-height: 59px;
+    padding: 0 29px;
+    overflow: hidden;
+    background: #e8eaea;
+    border-radius: 10px;
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #447f64;
+    margin-bottom: 14px;
+}
+.address {
+    justify-content: flex-start;
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #4b4d4c;
+    margin-bottom: 24px;
+}
+.xindes {
+    padding-left: 10px;
+    margin-top: 36px;
+}
+.xind {
+    width: 30px;
+    height: 30px;
+}
+.xindee {
+    width: 22px;
+    height: 26px;
+}
+.address .left-img {
+    width: 60px;
+    text-align: center;
+}
+.details {
+    min-height: 574px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px dashed #b3b3b3;
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #4b4d4c;
+    line-height: 40px;
+    padding: 30px 46px 36px;
+    margin-bottom: 82px;
+}

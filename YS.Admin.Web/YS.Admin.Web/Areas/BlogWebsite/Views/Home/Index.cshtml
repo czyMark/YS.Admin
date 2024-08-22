@@ -1,0 +1,238 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh-Hans-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Site.WebName</title>
+    <meta name="keywords" content="@ViewBag.Site.WebMETAKey" />
+    <meta name="description" content="@ViewBag.Site.WebMETAValue">
+    <link href="~/lib/BlogInfo/layui/css/layui.css" rel="stylesheet" type="text/css">
+    <link href="~/lib/BlogInfo/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/lib/BlogInfo/css/index_style.css" rel="stylesheet" type="text/css">
+    <link href="~/lib/BlogInfo/css/animate.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="menu" class="hover_animation menu_open" data-mark="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div id="navgation" class="navgation navgation_close">
+        <ul class="point">
+            <li><a href="~/BlogWebsite/Home/Index">首页</a></li>
+            <li><a href="~/BlogWebsite/Article/Index">文章</a></li>
+            <li><a href="~/BlogWebsite/Feedback/Index">留言</a></li>
+        </ul>
+        <div class="logo"><a>@ViewBag.Site.WebName</a></div>
+    </div>
+    <div class="section" id="section1">
+        <div class="fp-tablecell">
+            <div class="page1">
+                <div id="clouds" style="z-index: 1; "></div>
+                <div style=" position: absolute;z-index: 2;" id="cloudsText">
+                    <div class="nav wow zoomIn" data-wow-duration="1s">
+                        <h1 style="color: #001F3F;">@ViewBag.Site.WebName</h1>
+                        <p style="color: #001F3F;">@Html.Raw(@ViewBag.Site.WebTitle)</p>
+                        <a class="layui-btn layui-btn-normal" style="margin-top: 20px" href="~/BlogWebsite/Article/Index">查看文章</a>
+                    </div>
+                </div>
+                <a class="next wow fadeInUp" data-wow-duration="1s" id="next"></a>
+            </div>
+        </div>
+    </div>
+    <div class="section" id="section2" style="background-color:#4584b4">
+        <div class="fp-tablecell">
+            <div class="page2">
+                <div class="warp-box">
+                    <div class="new-article">
+                        <div class="inner wow fadeInDown" data-wow-delay=".2s">
+                            <h1>热门文章</h1>
+                        </div>
+                    </div>
+                    <div class="layui-row">
+                        @foreach (var item in ViewBag.HotArtileList)
+                        {
+                            <div class="layui-col-xs12 layui-col-sm4 layui-col-md4  wow fadeInUp" style="padding: 0 10px">
+                                <div class="single-news">
+                                    <div class="news-head">
+                                        <img src="@item.ImgUrl">
+                                        <a href="~/BlogWebsite/Article/Detail/@item.Id" class="link"><i class="fa fa-link"></i></a>
+                                    </div>
+                                    <div class="news-content">
+                                        <h4>
+                                            <a href="/">
+                                                @item.Title
+                                            </a>
+                                        </h4>
+                                        <div class="date">
+                                            @item.BaseCreateTime.ToString("yyyy年MM月dd日")
+                                        </div>
+                                        <p>
+                                            @item.ZhaiYao
+                                        </p>
+                                        <a href="~/BlogWebsite/Article/Detail/@item.Id" class="btn">
+                                            阅读更多
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section" id="section3">
+        <div class="fp-tablecell">
+            <div class="page3">
+                <div class="warp-box">
+                    <div class="warp">
+                        <div class="inner">
+                            <div class="links">
+                                <ul>
+                                    <li class="wow fadeInLeft"><a href="~/BlogWebsite/About/Index">关于我</a></li>
+                                    <li class="wow fadeInRight"><a href="~/BlogWebsite/About/Links">+友情链接</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section" id="section4">
+        <div class="fp-tablecell">
+            <div class="page4">
+                <div class="warp-box">
+                    <div class="about">
+                        <div class="inner">
+                            <h1 class="wow fadeInLeft">@ViewBag.Site.Slogan</h1>
+                            <p class="wow fadeInRight">
+                                @ViewBag.Site.Target
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer wow fadeInUp" id="contact">
+        <div class="footer-top">
+            <div class="container">
+                <div class="layui-row">
+                    <div class="layui-col-xs12 layui-col-sm6 layui-col-md4">
+                        <div class="single-widget about">
+                            <div class="footer-logo">
+                                <h2>@ViewBag.Site.WebName</h2>
+                            </div>
+                            <p>@Html.Raw(ViewBag.Site.WebTitle)</p>
+                            <div class="button">
+                                <a href="~/BlogWebsite/About/Index" class="btn layui-btn layui-btn-normal">了解我</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm6 layui-col-md4">
+                        <div class="single-widget">
+                            <h2>相关链接</h2>
+                            <ul class="social-icon">
+                                <li class="active"><a href="~/BlogWebsite/Article/Index"><i class="fa fa-book"></i>博文</a></li>
+                                <li class="active"><a href="~/BlogWebsite/Feedback/Index"><i class="fa fa-comments"></i>留言</a></li>
+                                @* <li class="active"><a href="~/BlogWebsite/Archives/Index"><i class="fa fa-files-o"></i>归档</a></li> *@
+                                <li class="active"><a href="~/BlogWebsite/Diarys/Index"><i class="fa fa-snowflake-o"></i>日记</a></li>
+                                <li class="active"><a href="~/BlogWebsite/Links/Index"><i class="fa fa-hashtag"></i>友链</a></li>
+                                <li class="active"><a href="~/BlogWebsite/About/Index"><i class="fa fa-share"></i>关于</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md4">
+                        <div class="single-widget contact">
+                            <h2>联系我</h2>
+                            <ul class="list">
+                                <li><i class="fa fa-map"></i>地址: @ViewBag.Site.WebAddr  </li>
+                                <li><i class="fa fa-qq"></i>QQ: @ViewBag.Site.WebQQ </li>
+                                <li><i class="fa fa-envelope"></i>邮箱: @ViewBag.Site.WebEmail</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <div class="container">
+                <div class="layui-row">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 text-center">
+                        <p>
+                            @Html.Raw(ViewBag.Site.WebCopyRight)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/BlogInfo/js/Clouds/ThreeWebGL.js"></script>
+    <script src="~/lib/BlogInfo/js/Clouds/ThreeExtras.js"></script>
+    <script src="~/lib/BlogInfo/js/Clouds/Detector.js"></script>
+
+    <script id="vs" type="x-shader/x-vertex">
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        }
+    </script>
+    <script id="fs" type="x-shader/x-fragment">
+        uniform sampler2D map;
+        uniform vec3 fogColor;
+        uniform float fogNear;
+        uniform float fogFar;
+        varying vec2 vUv;
+        void main() {
+            float depth = gl_FragCoord.z / gl_FragCoord.w;
+            float fogFactor = smoothstep( fogNear, fogFar, depth );
+            gl_FragColor = texture2D( map, vUv );
+            gl_FragColor.w *= pow( gl_FragCoord.z, 20.0 );
+            gl_FragColor = mix( gl_FragColor, vec4( fogColor, gl_FragColor.w ), fogFactor );
+        }
+    </script>
+    <script src="~/lib/BlogInfo/js/Clouds/CloudsBackGround.js"></script>
+    <script src="~/lib/BlogInfo/layui/layui.js"></script>
+    <script src="~/lib/BlogInfo/js/wow.min.js"></script>
+    <script src="~/lib/BlogInfo/js/index.js"></script>
+
+    <script>
+        function centerByLeftTop() {
+            var clouds = document.getElementById('cloudsText');
+            var windowHeight = window.innerHeight;
+            var cloudsHeight = clouds.offsetHeight;
+
+            // 计算需要多少 padding-top 来垂直居中
+            var top = (windowHeight - cloudsHeight) / 2;
+            clouds.style.top = top + 'px';
+
+            // 获取元素的宽度
+            var elementWidth = clouds.offsetWidth;
+            // 获取元素父容器的宽度
+            var parentWidth = clouds.parentElement.offsetWidth;
+            // 计算需要的水平偏移量
+            var left = (parentWidth - elementWidth) / 2;
+            // 设置元素的样式，使其水平居中
+            clouds.style.left = left + 'px';
+
+        }
+
+        // 调用函数以垂直居中元素
+        centerByLeftTop();
+
+        // 监听窗口大小变化事件，以适应不同分辨率
+        window.addEventListener('resize', centerByLeftTop);
+    </script>
+</body>
+</html>

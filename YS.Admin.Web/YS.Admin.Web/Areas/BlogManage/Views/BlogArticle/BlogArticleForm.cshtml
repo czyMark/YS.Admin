@@ -1,0 +1,174 @@
+﻿@using YS.Admin.Enum
+@using YS.Admin.Util
+@using YS.Admin.Util.Extension
+@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section header {
+
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/css/imgup.min.css"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/js/imgup.min.js"))
+
+    @*     @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.config.js"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.all.js"))*@
+
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.css"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js"))
+
+}
+<script src="~/lib/ueditor/ueditor.config.js"></script>
+<script src="~/lib/ueditor/ueditor.all.js"></script>
+<script>
+    //编辑器初始化
+    var ue = UE.getEditor('content', {
+        initialFrameWidth: '98%',
+        initialFrameHeight: 280,
+        initialFrameTop: 50,
+        scaleEnabled: true
+    });
+     
+</script>
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">文章标题</label>
+            <div class="col-sm-10">
+                <input id="title" col="Title" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">摘要</label>  
+            <div class="col-sm-10">
+                <textarea id="zhaiYao" col="ZhaiYao" type="text" class="form-control"
+                          style="resize: vertical;">
+                    </textarea>
+            </div> 
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">分类</label>
+            <div id="classId" class="col-sm-4" col="ClassId"></div> 
+            <label class="col-sm-2 control-label ">类型</label>
+            <div id="typeId" class="col-sm-4" col="TypeId"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">文章封面</label>
+            <div class="col-sm-10">
+                <div id="imgUrl" class="img-box">
+                </div> 
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">内容</label>
+            <div class="col-sm-10">
+                <textarea id="content" col="Content" class="editor"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">是否置顶</label>
+            <div class="col-sm-4" id="ding" col="Ding"></div> 
+            <label class="col-sm-2 control-label ">状态</label>
+            <div class="col-sm-4" id="status" col="Status"></div> 
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    $(function () {
+
+        $("#ding").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(IsEnum).EnumToDictionaryString())) });
+        $("#status").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(StatusEnum).EnumToDictionaryString())) });
+        $("#classId").ysComboBox({
+            data: top.getDataDict("BlogClass"),
+            key: "DictKey",
+            value: "DictValue"
+        });
+        $("#typeId").ysComboBox({
+            data: top.getDataDict("BlogType"),
+            key: "DictKey",
+            value: "DictValue"
+        });
+
+        $("#imgUrl").imageUpload({ uploadImage: 'uploadThumbImage', limit: 1, context: ctx });
+
+        getForm();
+
+        $('#form').validate({
+            rules: {
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/BlogManage/BlogArticle/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $("#imgUrl").imageUpload("setImageUrl", obj.Data.ImgUrl);
+                        $('#form').setWebControls(obj.Data);
+
+                        document.getElementById("content").value = obj.Data.Content;
+                        //console.log(obj.Data.Contents.length);
+                        if (obj.Data.Content.length > 0) {
+                            ue.ready(function () {
+                                //设置编辑器的内容
+                                ue.setContent(obj.Data.Content);
+                            });
+                        }
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id });
+            postData.ImgUrl = $("#imgUrl").imageUpload("getImageUrl");
+            postData.Content = ue.getContent();//document.getElementById("contents").value;
+            ys.ajax({
+                url: '@Url.Content("~/BlogManage/BlogArticle/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+    function uploadThumbImage(file, callback) {
+        var formdata = new FormData();
+        formdata.append("fileList", file[0]);
+        ys.ajaxUploadFile({
+            url: '/File/UploadFile?fileModule=@UploadFileType.News.ParseToInt()',
+            data: formdata,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    if (callback) {
+                        //callback('@GlobalContext.SystemConfig.ApiSite' + obj.Data);
+                        callback(obj.Data);
+                    }
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        })
+    }
+</script>
+

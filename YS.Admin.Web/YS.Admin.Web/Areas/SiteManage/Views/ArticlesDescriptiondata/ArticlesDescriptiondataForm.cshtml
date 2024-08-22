@@ -1,0 +1,175 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section header {
+
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/css/imgup.min.css"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/js/imgup.min.js"))
+
+    @*     @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.config.js"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.all.js"))*@
+
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.css"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js"))
+
+}
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">属性项</label>
+            <div class="col-sm-8">
+                <input id="c1" col="C1" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">属性值1</label>
+            <div class="col-sm-8">
+                <input id="c2" col="C2" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">属性值2</label>
+            <div class="col-sm-8">
+                <input id="c3" col="C3" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">图片</label> 
+            <div class="col-sm-8">
+                <div id="imgUrl" class="img-box">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">个性化操作</label>
+            <div class="col-sm-8">
+                <span id="c5" col="C5"></span> 
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">排序</label>
+            <div class="col-sm-8">
+                <input id="sortId" col="SortId" type="text" class="form-control" value="1" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">备注</label>
+            <div class="col-sm-8">
+                <textarea id="remark" col="Remark" type="text" class="form-control"
+                          style="resize: vertical;">
+                    </textarea> 
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    var pid = ys.request("pid");
+    $(function () {
+        $("#imgUrl").imageUpload({ uploadImage: 'uploadThumbImage', context: ctx });
+        getForm();
+
+        $('#form').validate({
+            rules: {
+                
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/SiteManage/ArticlesDescriptiondata/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $("#imgUrl").imageUpload("setImageUrl", obj.Data.C4);
+                        $('#form').setWebControls(obj.Data);
+
+                        $("#c5").text("");
+
+                        $("#c5").ysComboBox({
+                            data: [
+                                { Key: '藏品图片', Value: '藏品图片' },
+                                { Key: '大数据标识', Value: '大数据标识' },
+                                { Key: '印章图片', Value: '印章图片' },
+                                { Key: '评级日期', Value: '评级日期' },
+                                { Key: '大数据标识界面显示', Value: '大数据标识界面显示' },
+                                { Key: '证书顶部图片', Value: '证书顶部图片' }
+                            ],
+                            key: "Key",
+                            value: "Value",
+                            class: "form-control"
+                        });
+                        $("#c5").ysComboBox("setValue", obj.Data.C5);
+
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+
+            $("#linkType").ysComboBox({
+                data: [
+                    { Key: '藏品图片', Value: '藏品图片' },
+                    { Key: '大数据标识', Value: '大数据标识' },
+                    { Key: '印章图片', Value: '印章图片' },
+                    { Key: '评级日期', Value: '评级日期' },
+                    { Key: '大数据标识界面显示', Value: '大数据标识界面显示' }
+                ],
+                key: "Key",
+                value: "Value",
+                class: "form-control"
+            });
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id, ArticlesId: pid });
+            postData.C4 = $("#imgUrl").imageUpload("getImageUrl");
+
+            ys.ajax({
+                url: '@Url.Content("~/SiteManage/ArticlesDescriptiondata/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+
+    function uploadThumbImage(file, callback) {
+        var formdata = new FormData();
+        formdata.append("fileList", file[0]);
+        ys.ajaxUploadFile({
+            url: '/File/UploadFile?fileModule=@UploadFileType.News.ParseToInt()',
+            data: formdata,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    if (callback) {
+                        //callback('@GlobalContext.SystemConfig.ApiSite' + obj.Data);
+                        callback(obj.Data);
+                    }
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        })
+    }
+</script>
+

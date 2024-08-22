@@ -1,0 +1,142 @@
+.banner {
+    width: 100%;
+    height: 580px;
+}
+
+.element-wrap {
+    padding-top: 50px;
+    padding-bottom: 100px;
+    background-color: #f8fafa;
+}
+
+.styles {
+    width: 10% !important;
+}
+
+.title {
+    font-family: Source Han Sans CN;
+    font-size: 36px;
+    color: #447f64;
+}
+
+.label {
+    width: 1198px;
+    margin-top: 33px;
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #434549;
+    line-height: 40px;
+}
+
+.table-wrap {
+    background-color: #fff;
+    margin-top: 49px;
+}
+
+.table-wrap .titles {
+    height: 51px;
+    background-color: #447f64;
+}
+
+.table-wrap .titles p {
+    width: 50%;
+    line-height: 51px;
+    font-family: Source Han Sans CN;
+    font-size: 25px;
+    color: #ffffff;
+}
+
+.table-value-list {
+    padding-top: 6px;
+    background-color: #f8fafa;
+}
+
+.table-value-list .table-value-item {
+    justify-content: space-between;
+    gap: 4px;
+    height: 100px;
+    margin-bottom: 8px;
+}
+
+.table-value-item .left {
+    width: 50%;
+    height: 100% !important;
+    background-color: #e8efef;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.table-value-item .right {
+    width: 50%;
+    height: 100% !important;
+    background-color: #e8efef;
+    display: flex;
+    color: #4C4C4C;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.textleft {
+    margin-left: 25%;
+}
+
+.table-value-item .left .textleft {
+    font-family: Source Han Sans CN;
+    color: #447F64;
+    line-height: 27px;
+}
+
+.table-value-item .left .top {
+    font-family: Source Han Sans CN;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.table-value-item .left .bottom {
+    font-family: Source Han Sans CN;
+    font-size: 18px;
+    margin-top: 7px;
+    font-weight: bold;
+
+}
+
+.table-value-item .right {
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #4C4C4C;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.table-value-item .right .right {
+    font-size: 21px;
+}
+
+.active .left {
+    background-color: #fff;
+}
+
+.active .right {
+    background-color: #fff;
+}
+
+.price-details {
+    background-color: #447f64;
+    height: 180px;
+    padding: 32px 39px 49px;
+}
+
+.price-details div {
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.price-details .labels {
+    color: #eee;
+}
+
+.price-details .label-title {
+    margin: 16px 0 22px;
+}

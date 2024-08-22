@@ -1,0 +1,79 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/banknoteAuthentication.css")" />
+}
+
+<div id="app3" class="wrap">
+    <div class="element-wrap">
+        <div class="con-main-wrap">
+            <div class="title">@ViewBag.Title </div>
+            <div class="label">@ViewBag.Explanatory </div>
+            @if (ViewBag.tableList != null)
+            {
+                <div class="list" v-if="data.tableList.length !== 0">
+                    <div class="item flex-row" v-for="(item,index) in data.tableList"
+                         :class="index%2==1?'active':''" :key="index">
+                        <div class="left">
+                            <div class="title"> {{item.C1}} </div>
+                            <div class="label"> {{item.C2}} </div>
+                        </div>
+                        <div class="right">
+                            <div class="label"> {{item.C3}} </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const App3 = {
+        data() {
+            return {
+
+                data: {
+                    tableList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.tableList))
+               }
+            }
+        },
+        methods: {
+
+        },
+        mounted() {
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

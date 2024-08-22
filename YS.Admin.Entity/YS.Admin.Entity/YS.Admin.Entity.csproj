@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="ShortLInk\" />
+    <Folder Include="ToolManage\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\YS.Admin.Util\YS.Admin.IdGenerator\YS.Admin.IdGenerator.csproj" />
+    <ProjectReference Include="..\..\YS.Admin.Util\YS.Admin.Util\YS.Admin.Util.csproj" />
+    <ProjectReference Include="..\..\YS.Admin.Web\YS.Admin.Web.Code\YS.Admin.Web.Code.csproj" />
+  </ItemGroup>
+
+</Project>

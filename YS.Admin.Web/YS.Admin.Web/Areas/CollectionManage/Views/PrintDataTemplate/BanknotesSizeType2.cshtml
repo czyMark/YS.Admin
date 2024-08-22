@@ -1,0 +1,467 @@
+﻿
+<title>打印纸币</title>
+
+<script src="~/lib/jquery/2.1.4/jquery.js"></script>
+<script src="~/lib/qrcode/jquery.qrcode.min.js"></script>
+<style type="text/css">
+    * {
+        padding: 0;
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+        background-color: #606060
+    }
+
+
+    .label-box {
+        width: 168mm;
+        height: 1122px;
+        margin: 0 auto;
+        background: #fff;
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+
+    .label-list {
+        width: 168mm;
+        height: 100%;
+        margin: 0 auto;
+        clear: both;
+        overflow: hidden;
+    }
+
+
+    .item {
+        width: 168mm;
+        height: 27mm;
+        background: #ffffff; /* 修改查看的颜色 */
+        float: left;
+    }
+
+        .item .tr_0 {
+            float: left;
+            width: 4mm;
+            height: 100%;
+            background-color: #437C62
+        }
+
+        .item .tr_l {
+            float: left;
+            width: 44.5mm;
+            height: 100%;
+        }
+
+
+
+        .item .tr_m1 {
+            float: left;
+            width: 44mm;
+            margin-top: 5.2mm;
+        }
+
+
+        .item .tr_m2 {
+            float: left;
+            width: 36mm;
+            margin-top: 5.2mm;
+        }
+
+
+        .item .tr_m3 {
+            width: 35.5mm;
+            margin-top: 5.2mm;
+            float: left;
+            display: inline-block;
+        }
+
+        .item .tr_m4 {
+            width: 3mm;
+        }
+
+
+
+        .item .tr_backl {
+            float: left;
+            width: 133mm;
+            height: 100%;
+        }
+
+        .item .tr_backl2 {
+            margin-top: 5.2mm;
+            float: left;
+            width: 14mm;
+            height: 100%;
+        }
+
+        .item .tr_backl3 {
+            float: left;
+            width: 13mm;
+            height: 100%;
+        }
+
+
+
+    .item1 {
+        width: 168mm;
+        height: 27mm;
+        background: #f0f0f0; /* 修改查看的颜色 */
+        float: left;
+    }
+
+        .item1 .tr_l {
+            float: left;
+            width: 44.5mm;
+            height: 100%;
+        }
+
+
+        .item1 .tr_backl {
+            float: left;
+            width: 133mm;
+            height: 100%;
+        }
+
+        .item1 .tr_backl2 {
+            margin-top: 5.2mm;
+            float: left;
+            width: 14mm;
+            height: 100%;
+        }
+
+        .item1 .tr_backl3 {
+            float: left;
+            width: 13mm;
+            height: 100%;
+        }
+
+
+        .item1 .tr_0 {
+            float: left;
+            width: 4mm;
+            height: 100%;
+            background-color: #437C62
+        }
+
+        .item1 .tr_m1 {
+            float: left;
+            width: 44mm;
+            margin-top: 5.2mm;
+        }
+
+
+        .item1 .tr_m2 {
+            float: left;
+            width: 36mm;
+            margin-top: 5.2mm;
+        }
+
+
+        .item1 .tr_m3 {
+            width: 35.5mm;
+            margin-top: 5.2mm;
+            float: left;
+            display: inline-block;
+        }
+
+        .item1 .tr_m4 {
+            width: 3mm;
+        }
+
+    .YS {
+        font-family: "华文新魏";
+        font-weight: bold;
+        color: #437C62;
+        font-size: 22pt;
+        margin-top: 3mm;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+
+
+
+    .top-left, .top-right, .bottom-text {
+    }
+
+    .top-text {
+        display: flex;
+    }
+
+
+    .top-left {
+        margin-top: -20px;
+        margin-left: 20px;
+        font-size: 47pt;
+        font-weight: bold;
+        font-family: Gazette LH;
+        color: #000;
+    }
+
+    .top-right {
+        text-align: center;
+        font-size: 9pt;
+        color: #000;
+        font-weight: bold;
+        font-family: Gazette LH;
+    }
+
+    .bottom-text {
+        text-align: center;
+        font-size: 9pt;
+        color: #000;
+        margin-top: -20px;
+        font-weight: bold;
+        font-family: Gazette LH;
+    }
+
+
+    .epq {
+        font-size: 10pt;
+        color: #000;
+        font-weight: bold;
+        font-family: Gazette LH;
+        right: 0;
+        top: 0;
+    }
+
+
+    .verfiycode {
+        width: 14mm;
+        height: 14mm;
+    }
+
+    .verfiycode-text {
+        font-size: 8pt;
+        color: #000;
+        font-weight: bold;
+        font-family: 思源宋体;
+    }
+
+    .content-area {
+        text-align: left;
+    }
+
+    .content-areaA {
+        text-align: left;
+        font-size: 11.5pt;
+        font-family: "思源宋体Heavy";
+        font-weight: Bold;
+        color: #000;
+    }
+
+    .content-areaB {
+        text-align: left;
+        margin-top: 3mm;
+        font-size: 10pt;
+        font-family: "思源宋体";
+        font-weight: Bold;
+        margin-top: 3mm;
+        color: #000;
+    }
+
+    .content-areaC {
+        text-align: left;
+        margin-top: 3mm;
+        font-size: 10pt;
+        font-family: "思源宋体";
+        font-weight: Bold;
+        color: #000;
+    }
+
+</style>
+
+<body id="bodycontent">
+
+    @* <div class="label-box">
+    <div class="label-list">
+    <div class="item">
+    <div class="tr_0"></div>
+    <div class="tr_l"></div>
+    <div class="tr_m1">
+    <div class="content-area">
+    <div class="content-areaA">
+    <span class="CollectionYear">1960年</span>
+    <span class="CollectionValue">贰圆券(百连)</span>
+    </div><div class="content-areaB">
+    <span class="CollectionName">正背面凹印</span>
+    <span class="PrintArt">车床工人</span>
+    </div>
+    <div class="content-areaC">《ⅥⅠⅠ》4958609</div>
+    </div>
+    </div><div class="tr_m2">
+    <div class="YS EditionPersonalization">五星水印</div>
+    </div>
+    <div class="tr_m3">
+    <div class="top-text"><div class="top-left Rating">68</div><div class="top-right HQP">H<br>Q<br>P</div></div>
+    <div class="bottom-text RatingEnglish">Superb Gem Unc</div>
+    </div>
+
+    <div class="tr_0"></div>
+    </div>
+    </div>
+    </div>
+
+
+    <div class="label-box">
+    <div class="label-list">
+    <div class="item"><div class="tr_0"></div>
+    <div class="tr_backl"></div>
+    <div class="tr_backl2"><div style="display: flex;flex-direction: column;"><div class="verfiycode IDCode" lang="2400026736"> </div><div><span class="verfiycode-text IDCode">2400026736</span></div></div></div>
+    <div class="tr_backl3"></div><div class="tr_0"></div></div>
+    </div>
+    </div> *@
+</body>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var id = urlParams.get('id'); // 获取id参数
+        $.ajax({
+            url: "GetPrintTempPageListJson?Id=" + id + "",
+            method: 'GET',
+            success: function (obj) {
+                if (obj.Tag == 1) {
+
+                    var htmlstr = '', pagehtml = '', rowhtml = '';
+                    var backhtmlstr = '', backpagehtml = '', backrowhtml = '';
+                    var i = 1;
+                    var logi = 0;
+                    var tlength = obj.Data.length;
+                    obj.Data.forEach(function (item) {
+                        logi++;
+                        //遍历组织html
+                        if (i == 1) {
+                            pagehtml = '<div class="label-box" ><div class="label-list" >';
+                            backpagehtml = '<div class="label-box" ><div class="label-list" >';
+                        }
+                        if (i % 2 == 0) {
+                            rowhtml += '<div class="item1">';
+                            backrowhtml += '<div class="item1">';
+                        } else {
+                            rowhtml += '<div class="item">';
+                            backrowhtml += '<div class="item">';
+                        }
+
+
+                        //正面
+                        rowhtml += '<div class="tr_0"></div><div class="tr_l"></div><div class="tr_m1"><div class="content-area"><div class="content-areaA"><span class="CollectionYear">';
+                        if (item.CollectionYear != null)
+                            rowhtml += item.CollectionYear;
+                        rowhtml += '</span>&nbsp;&nbsp;<span class="CollectionValue">';
+                        if (item.CollectionValue != null)
+                            rowhtml += item.CollectionValue;
+                        rowhtml += '</span></div><div class="content-areaB"><span class="CollectionName">';
+                        if (item.CollectionName != null)
+                            rowhtml += item.CollectionName;
+                        rowhtml += '</span>&nbsp;&nbsp;<span class="PrintArt"> ';
+                        if (item.PrintArt != null)
+                            rowhtml += item.PrintArt;
+                        rowhtml += '</span></div><div class="content-areaC" class="SerialCode">';
+                        if (item.SerialCode != null)
+                            rowhtml += item.SerialCode;
+                        rowhtml += '</div></div></div><div class="tr_m2"><div class="YS EditionPersonalization">';
+                        if (item.EditionPersonalization != null)
+                            rowhtml += item.EditionPersonalization;
+                        rowhtml += '</div></div><div class="tr_m3"><div class="top-text"><div class="top-left Rating">';
+                        if (item.Rating != null)
+                            rowhtml += item.Rating;
+                        rowhtml += '</div><div class="top-right HQP">';
+                        if (item.HQP == "是") {
+                            rowhtml += 'H<br/>Q<br/>P';
+                        }
+                        rowhtml += '</div></div><div class="bottom-text RatingEnglish">';
+                        if (item.RatingEnglish != null)
+                            rowhtml += item.RatingEnglish;
+                        //结束div
+                        rowhtml += '</div></div><div class="tr_0"></div></div> ';
+
+                        //反面
+                        backrowhtml += '<div class="tr_0" ></div><div class="tr_backl" ></div><div class="tr_backl2" ><div style="display: flex;flex-direction: column;" ><div class="verfiycode IDCode" lang="' +
+                            item.IDCode
+                            + '" > </div><div ><span class="verfiycode-text IDCode" >';
+                        if (item.IDCode != null)
+                            backrowhtml += item.IDCode;
+                        backrowhtml += '</span></div></div></div><div class="tr_backl3" ></div><div class="tr_0" ></div></div>';
+
+
+                        i++;
+                        if (i > 10) {
+
+                            rowhtml += '</div></div>';
+                            htmlstr += pagehtml + rowhtml;
+                            pagehtml = '';
+                            rowhtml = '';
+
+                            backrowhtml += '</div></div>';
+                            htmlstr += backpagehtml + backrowhtml;
+                            backpagehtml = '';
+                            backrowhtml = '';
+                            i = 1;
+                        } else if (logi == tlength) {
+
+                            //如果结束了增加页
+                            rowhtml += '</div></div>';
+                            htmlstr += pagehtml + rowhtml;
+                            pagehtml = '';
+                            rowhtml = '';
+
+                            backrowhtml += '</div></div>';
+                            htmlstr += backpagehtml + backrowhtml;
+                            backpagehtml = '';
+                            backrowhtml = '';
+                            i = 1;
+                        }
+                    });
+                    //赋值到body中,里面生效
+                    $("#bodycontent").html(htmlstr);
+                    $(".verfiycode").each(function (index) {
+                        var _this = $(this);
+                        var _lang = _this.attr("lang");//证书标号
+                        var _url = "https://www.gzpm010.com/jdjg/" + _lang;
+                        _this.qrcode({
+                            width: 54, //宽度
+                            height: 54, //高度
+                            text: _url
+                        })
+                    });
+
+                    //生成样式
+
+                    $.ajax({
+                        url: "GetPrintStylePropListJson?StyleId=" + obj.Data[0].PrintStyleID + "",
+                        method: 'GET',
+                        success: function (obj) {
+                            if (obj.Tag == 1) {
+                                //查询所有的样式
+                                obj.Data.forEach(function (item) {
+                                    $("." + item.StylePropElement + "").each(function (index) {
+                                        var _this = $(this);
+                                        var cssstr = "";
+                                        _this.css({
+                                            'color': item.StylePropColor,
+                                            'font-family': item.StylePropFontFamily,
+                                            'font-size': item.StylePropFontSize
+                                        });
+                                    });
+                                });
+                            }
+                            else {
+                                alert("样式加载错误！");
+                            }
+                        }
+                    });
+                } else {
+                    alert("数据加载错误");
+                }
+            },
+            error: function (xhr, status, error) {
+                alert(error);
+            }
+        });
+    });
+</script>
+

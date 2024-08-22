@@ -1,0 +1,107 @@
+﻿@using YS.Admin.Util
+
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+
+
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap/3.3.7/css/bootstrap.min.css"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/fontawesome/4.7.0/css/fontawesome.min.css"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/jquery/2.1.4/jquery.min.js"))
+
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap/3.3.7/js/bootstrap.min.js"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/layer/3.1.1/layer.min.js"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/laydate/5.0.9/laydate.min.js"))
+
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/YS.Admin/css/YS.Admin.min.css"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/YS.Admin/js/YS.Admin-init.min.js"))
+
+@{
+    ViewBag.Title = ViewBag.Site.WebName + "-留言板";
+}
+@section css {
+    <link rel="stylesheet" href="~/lib/BlogInfo/css/message.css" />
+}
+
+<div class="doc-container" id="doc-container">
+    <div class="container-fixed">
+        <div class="container-inner">
+            <section class="msg-remark">
+                <h1>留言板</h1>
+                <p>
+                    留下你的足迹，让你我进一步交流
+                </p>
+            </section>
+            <div class="textarea-wrap message" id="textarea-wrap">
+                <form class="layui-form blog-editor" action="">
+                    <div class="form-group">
+                        <label class="control-label ">姓名</label>
+                        <div>
+                            <input id="userName" col="UserName" type="text" class="form-control" />
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label class="control-label ">联系方式</label>
+                        <div>
+                            <input id="userEmail" col="UserEmail" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label ">留言内容</label>
+                        <div>
+                            <textarea name="editorContent" lay-verify="content" id="remarkEditor" placeholder="请输入内容" class="layui-textarea layui-hide"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        @if (ViewBag.Site.FeedbackStatus == "1")
+                        {
+                            <a class="layui-btn"  onclick="Save()">提交留言</a>
+                        }
+                        else
+                        {
+                            <div style="text-align: center;">
+                                <span>留言功能已被关闭了哟～</span>
+                            </div>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="f-cb"></div>
+
+    </div>
+</div>
+
+
+@if (ViewBag.Site.FeedbackStatus == "1")
+{
+
+    <script type="text/javascript">
+        function Save() {
+            var postData = {};
+            postData.UserName = $("#userName").val();
+            postData.UserEmail = $("#userEmail").val();
+            postData.Content = $("#remarkEditor").html();
+            $.ajax({
+                url: '@Url.Content("~/BlogManage/Sitefeedback/Save")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        layer.msg(obj.message, {
+                            icon: 6
+                        });
+                    }
+                    else {
+                        layer.msg(obj.Message, {
+                            icon: 2
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+}
+
+@section js {
+    <script src="~/lib/BlogInfo/js/pagemessage.js"></script>
+}

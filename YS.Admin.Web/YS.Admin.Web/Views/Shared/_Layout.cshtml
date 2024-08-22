@@ -1,0 +1,87 @@
+﻿@using YS.Admin.Model.Result
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>首页 - 北京社科</title>
+
+    <link rel="stylesheet" href="/css/master.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/layout.css">
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.SuperSlide.2.1.1.js"></script>
+    <script src="/js/global.js"></script>
+
+</head>
+
+<body>
+    @ViewBag.UrlParam.Cid
+    <div class="body-box">
+        @await Component.InvokeAsync("Top", new { urlparam = (UrlParam)ViewBag.UrlParam })
+        @RenderSection("Top", false)
+
+        @RenderBody()
+        @RenderSection("Foot", false)
+        @await Component.InvokeAsync("Foot", new { urlparam = (UrlParam)ViewBag.UrlParam })
+    </div>
+
+    <div class="elevator">
+        <a class="return-home" href="/">
+            <img src="images/return-home.jpg" alt="">
+        </a>
+        <div class="to-top" id="toTop">
+            <img src="images/return-top.jpg" alt="">
+        </div>
+    </div>
+
+    <script>
+
+        jQuery(document).ready(function ($) {
+            if ($(this).scrollTop() == 0) {
+                $("#toTop").fadeOut();
+            }
+            $(window).scroll(function (event) {
+                if ($(this).scrollTop() == 0) {
+                    $("#toTop").fadeOut();
+                }
+                if ($(this).scrollTop() != 0) {
+                    $("#toTop").fadeIn();
+                }
+            });
+            $("#toTop").click(function (event) {
+                $("html,body").animate({
+                    scrollTop: "0px"
+                }, 666)
+            });
+        });
+
+
+        jQuery(".js-index-banner").slide({
+            mainCell: ".bd ul",
+            titCell: ".hd ul",
+            autoPlay: true,
+            interTime: 5000,
+            autoPage: "<li></li>"
+        });
+
+        jQuery(".js-news-list").slide({
+            trigger: "click",
+        });
+
+        jQuery(".index-experts").slide({
+            titCell: ".hd ul",
+            mainCell: ".bd ul",
+            effect: "leftLoop",
+            autoPlay: true,
+            vis: 6,
+            interTime: 5000,
+            trigger: "click"
+        });
+
+    </script>
+</body>
+</html>

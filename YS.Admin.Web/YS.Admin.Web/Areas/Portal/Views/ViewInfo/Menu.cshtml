@@ -1,0 +1,49 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+    <link rel="stylesheet" href="@Url.Content("~/css/menu.css")" />
+}
+ 
+
+<div id="app3" >
+    <div class="menu-cen-wrap">
+        <div class="menu-wrap" v-for="(item,index) in bodyMenuList" :key="index" :class="index%2==0?'':'active'">
+            <div class="con-main-wrap">
+                <div class="title"> {{item.title}}</div>
+                <div class="list">
+                    <a class="item" v-for="(i,iIndex) in item.children" :key="iIndex" :href="i.href">
+                        <img class="icon" :src="i.icon" alt="" />
+                        <img class="select-icon" :src="i.selectIcon" alt="" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script> 
+    const App3 = {
+        data() {
+            return {
+                bodyMenuList: @Html.Raw(@ViewBag.bodyMenuList)
+            }
+        },
+        methods: { 
+        },
+        mounted() { },
+        beforeUnmount() { },
+        components: { 
+        }
+    };
+     
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

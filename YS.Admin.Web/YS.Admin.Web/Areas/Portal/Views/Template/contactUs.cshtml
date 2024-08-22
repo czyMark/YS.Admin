@@ -1,0 +1,113 @@
+﻿@using Newtonsoft.Json
+@using YS.Admin.Entity.SiteManage
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/contactUs.css")" />
+
+    
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=5Yjs5uAjrRFoVykq8tFgajBU8iA1vDJh">
+    </script>
+}
+
+<div id="app3" class="wrap">
+    <div class="con-main-wrap flex-row nei">
+        <div class="left">
+            <div class="item flex-row">
+                <div class="icon flex-row">
+                    <img src="/images/pingji/icon3.png" alt="" />
+                </div>
+                <p> 地址： <div class="sssssp">@ViewBag.Addr</div> </p>
+            </div>
+            <div class="item flex-row">
+                <div class="icon flex-row">
+                    <img src="/images/pingji/icon4.png" alt="" />
+                </div>
+                <p> 工作时间： @ViewBag.WorkTime </p>
+            </div>
+            <div class="item flex-row">
+                <div class="icon flex-row">
+                    <img src="/images/pingji/icon5.png" alt="" />
+                </div>
+                <p> 客服： @ViewBag.ServiceTel </p>
+            </div>
+            <div class="list flex-row">
+                @if (ViewBag.tableList != null)
+                { 
+                    @foreach (var item in ViewBag.tableList)
+                    {
+                        <div class="items">
+                            <p class="label"> <img class="code" src="@item.C4" alt="" /></p>
+                            <p class="label"> @item.C1 </p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div id="container"></div>
+    </div>
+    <div class="con-main-wrap details">
+        @Html.Raw(@ViewBag.details)
+    </div>
+
+</div>
+
+<script>
+
+
+    const App3 = {
+        data() {
+            return {
+                query: {
+                    total: 1000,
+                    page: 1,
+                    size: 10
+                },
+                data: {
+                }
+            }
+
+        },
+        methods: {
+
+        },
+        created() {
+            var map = new BMapGL.Map("container");
+            var point = new BMapGL.Point(116.404, 39.915);
+            map.centerAndZoom(point, 15);
+        },
+        mounted() {
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

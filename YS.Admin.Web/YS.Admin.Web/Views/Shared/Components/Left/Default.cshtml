@@ -1,0 +1,23 @@
+﻿@model IEnumerable<WebTreeList>
+<div class="sidebar f-fl">
+    <div class="title">@ViewBag.nodeName</div>
+    <ul class="leftsidebar">
+        @foreach (var item in Model)
+        {
+            <li class="item  @(item.Id==ViewBag.urlparam.pid?"active":"")">
+                <a href="/@item.ModelUrl/C/@item.Cid">@item.Title</a>
+                @if (item.WebChildList.Count > 0)
+                {
+                    <ul class="subMenu" @(item.Id==ViewBag.urlparam.pid  ? "" : "style=display:none;")>
+                        @foreach (var itemChild in item.WebChildList)
+                        {
+                            <li class="subMenuItem  @(itemChild.Id==ViewBag.urlparam.Cid?"active":"")">
+                                <a href="/@itemChild.ModelUrl/C/@itemChild.Id">@itemChild.Title</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    </ul>
+</div>

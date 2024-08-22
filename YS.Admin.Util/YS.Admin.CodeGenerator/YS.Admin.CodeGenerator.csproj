@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\YS.Admin.Business\YS.Admin.Business.Cache\YS.Admin.Business.Cache.csproj" />
+    <ProjectReference Include="..\..\YS.Admin.Data\YS.Admin.Data.Repository\YS.Admin.Data.Repository.csproj" />
+    <ProjectReference Include="..\..\YS.Admin.Entity\YS.Admin.Entity\YS.Admin.Entity.csproj" />
+    <ProjectReference Include="..\YS.Admin.Util\YS.Admin.Util.csproj" />
+  </ItemGroup>
+</Project>

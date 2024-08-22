@@ -1,0 +1,86 @@
+.banner {
+    width: 100%;
+    height: 580px;
+}
+
+.element-wrap {
+    padding-top: 69px;
+    padding-bottom: 78px;
+    background-color: #f8fafa;
+}
+
+.styles {
+    width: 10% !important;
+}
+
+.element-wrap .title {
+    font-family: Source Han Sans CN;
+    font-size: 36px;
+    color: #447f64;
+}
+
+.element-wrap .label {
+    margin-top: 46px;
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #4b4d4c;
+}
+
+.list {
+    margin-top: 24px;
+}
+
+.item {
+    gap: 3px;
+    height: 112px;
+    margin-bottom: 5px;
+    justify-content: space-between;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.item:hover .right .label {
+    color: #447f64;
+}
+
+.item .left {
+    width: 200px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background-color: #e8efef;
+}
+
+.item .left .title {
+    font-size: 30px;
+}
+
+.item .left .label {
+    margin-top: 0;
+    font-size: 16px;
+    color: #447f64;
+}
+
+.item .right {
+    width: 0;
+    flex: 1;
+    height: 100%;
+    padding-left: 50px;
+    font-size: 15px;
+    background-color: #e8efef;
+}
+
+.active {
+    background-color: #f8fafa;
+}
+
+.active .left {
+    background-color: #fff;
+}
+
+.active .right {
+    background-color: #fff;
+}

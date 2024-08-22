@@ -1,0 +1,84 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">任务名称</label>
+            <div class="col-sm-4">
+                <input id="taskName" col="TaskName" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-2 control-label ">耗时(秒)</label>
+            <div class="col-sm-4">
+                <input id="elapsedTime" col="ElapsedTime" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">执行状态</label>
+            <div class="col-sm-8" id="logStatus" col="LogStatus">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">返回内容</label>
+            <div class="col-sm-4">
+                <textarea id="responseContent" col="ResponseContent" type="text" class="form-control"
+                          style="resize: vertical;">
+                    </textarea>
+            </div>
+            <label class="col-sm-2 control-label ">错误信息</label>
+            <div class="col-sm-4">
+                <textarea id="errorMsg" col="ErrorMsg" type="text" class="form-control"
+                          style="resize: vertical;">
+                    </textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">开始时间</label>
+            <div class="col-sm-4">
+                <input id="stratDate" col="StratDate" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-2 control-label ">结束时间</label>
+            <div class="col-sm-4">
+                <input id="endDate" col="EndDate" type="text" class="form-control" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    $(function () {
+
+
+        $("#logStatus").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(OperateStatusEnum).EnumToDictionaryString())) });
+
+        getForm();
+
+        $('#form').validate({
+            rules: {
+                elapsedTime: { required: true }
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/SystemManage/Quartzlog/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $('#form').setWebControls(obj.Data);
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+     
+</script>
+

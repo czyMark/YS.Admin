@@ -1,0 +1,223 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/goods.css")" />
+}
+
+<div id="app3" class="wrap">
+    @* 导航 *@
+    <div class="wai">
+        <div class="select-wrap con-main-wrap">
+            <img src="/images/goods/left.png" class="left-nav" alt="" v-on:click="prev" />
+            <el-carousel indicator-position="none" ref="carousel" :autoplay="false" arrow="always"
+                         :style="{ height: 70 + 'px',width:'100%'  }">
+                <el-carousel-item :style="{ height: 70 + 'px' }" v-for="(group, groupIndex) in groupedData()" :key="groupIndex" class="el-topnav">
+                    <div class="select-list" v-for="(item, index) in group" :key="index">
+                    <li class="select-item"
+                        :class="(groupIndex*this.groupCount+index)==query.select?'active':''">
+                        <a :href="greeting(item.Id)" style="color:black"> {{ item.Title }} </a>
+                    </li>
+        </div>
+        </el-carousel-item>
+        </el-carousel>
+        <img src="/images/goods/right.png" alt="" class="right-nav" v-on:click="next" />
+    </div>
+</div>
+
+    @if (ViewBag.tableList != null)
+    {
+    <div class="element-wrap">
+        <div class="goods-wrap con-main-wrap">
+            <a v-for="(item,index) in data.tableList" :href="greetingRatingCertificate(item.Id)" class="goods-item" :key="index">
+                <div class="top-img">
+                    <img :src="item.ImgUrl" alt="" />
+                </div>
+                <div class="bottom"> {{item.Title}} </div>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="flex-row fenye">
+        <div class="btn" v-on:click="prevPage">上一页</div>
+        <div class="list flex-row">
+            <div class="item" v-for="(item, index) in paginatedList" :key="index"
+                 :class="{ actives: item === query.page }" v-on:click="changePage(item)">
+                {{ item   }}
+            </div>
+            <div v-if="(Math.ceil(this.query.total/this.itemsPerPage)-this.query.page)>=2 && Math.ceil(this.query.total/this.itemsPerPage)>=perPageCount+1">...</div>
+        </div>
+        <div class="btn" v-on:click="nextPage">下一页</div>
+    </div>
+    }
+
+
+
+
+
+    </div>
+
+<script>
+
+    const App3 = {
+        data() {
+            return {
+                carousel: null,
+                query: {
+                    page: 1,
+                    total: @ViewBag.total,
+                    select: @ViewBag.select
+                             },
+                itemsPerPage: 9,
+                perPageCount: 8, 
+                groupCount: 5,
+                data: {
+                    tableList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.tableList)),
+                    selectList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.selectList))
+                  }
+            }
+
+        },
+        computed: {
+            paginatedList() { 
+                const totalpage= Math.ceil(this.query.total/this.itemsPerPage);
+                 //当前选中页  大于4页的情况
+                 return this.getNumbers(new Array(totalpage)
+                 .fill(0)
+                 .map((_, i) => i+1 ),this.query.page,this.perPageCount  );
+            }
+        },
+        methods: {
+            //滑动窗口取数据
+             getNumbers(array, start, windowSize) {
+                    let window = [];
+                    let arrayLength = array.length;
+                    // 确保起始索引不超出数组长度
+                    start = Math.min(start, arrayLength - 1);
+                    // 计算实际的起始位置，如果起始位置加上窗口大小超过数组长度
+                    // 则从数组末尾开始取，直到取满窗口大小
+                    let actualStart = start - windowSize + 1;
+                    if (actualStart < 0) {
+                      actualStart = 0;
+                    }
+                    // 从实际起始位置开始取数，直到取满窗口大小或到达数组末尾
+                    for (let i = actualStart; i < arrayLength && window.length < windowSize; i++) {
+                      window.push(array[i]);
+                    }
+                    // array 长度不超过 8个，
+                    if(arrayLength>=windowSize)
+                    {
+                        // 如果窗口未满，继续从数组开头取数，直到取满窗口大小
+                        for (let i = 0; i < windowSize - window.length; i++) {
+                          window.push(array[i]);
+                        }
+                    }
+                    return window;
+            },
+            greetingRatingCertificate(id) {
+                return `./ratingCertificate?id=${id}`;
+            },
+            greeting(id) {
+                return `./SiteInfo?id=${id}`;
+            },
+            //拆分数据
+            groupedData() {
+                const groups = [];
+                const selectList = this.data.selectList || []; // 如果selectList未定义，则使用空数组
+                for (let i = 0; i < selectList.length; i += this.groupCount) {
+                    groups.push(selectList.slice(i, i + this.groupCount));
+                }
+                return groups;
+            },
+            //标题筛选切换
+            changeSelect(index) {
+                this.query.select = index;
+                //跳转到1分类
+            },
+            //展示图片左右
+            prev() {
+                this.$refs.carousel.prev();
+            },
+            next() {
+                this.$refs.carousel.next();
+            },
+            //分页相关
+            changePage(page) {
+
+                this.query.page = page;
+                this.updateStart(page); 
+            },
+            updateStart(page) {
+                
+                //查询数据
+
+                   var queryUrl = '@Url.Content("~/Portal/ViewInfo/GetArticlesPageListJson")?CategoryId=@(ViewBag.CategoryId)'
+            + '&PageIndex=' + this.query.page
+            + '&PageSize=' + this.itemsPerPage;
+                           $.ajax({
+                                     url: queryUrl,
+                                     method: 'GET',
+                                     success: (obj) => { 
+                                         if (obj.Tag == 1) { 
+                                       this.data.tableList = obj.Data;
+                                       this.query.total = obj.Total;
+                                     }else
+                                     {
+                                       console.error(obj.Message);
+                                     }
+                                     },
+                                     error: (jqXHR, textStatus, errorThrown) => {
+                                       console.error('Error fetching data:', textStatus, errorThrown);
+                                     }
+                     });    
+
+                paginatedList();
+            },
+            prevPage() {
+                if (this.query.page > 1) {
+                    this.query.page--;
+                    this.updateStart(this.query.page);
+                }
+            },
+            nextPage() {
+                if (this.query.page < Math.ceil(this.query.total / this.itemsPerPage)) {
+                    this.query.page++;
+                    this.updateStart(this.query.page);
+                }
+            }
+        },
+        mounted() {
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

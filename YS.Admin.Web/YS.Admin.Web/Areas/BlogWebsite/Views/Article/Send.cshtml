@@ -1,0 +1,191 @@
+﻿@using YS.Admin.Enum
+@using YS.Admin.Util
+@using YS.Admin.Util.Extension
+
+@{
+    ViewBag.Title = ViewBag.Site.WebName + "发布文章";
+}
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section css {
+
+
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap/3.3.7/css/bootstrap.min.css"))
+
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/YS.Admin/css/style.min.css"))
+
+
+
+}
+<script src="~/lib/ueditor/ueditor.config.js"></script>
+<script src="~/lib/ueditor/ueditor.all.js"></script>
+<script>
+    //编辑器初始化
+    var ue = UE.getEditor('content', {
+        initialFrameWidth: '98%',
+        initialFrameHeight: 280,
+        initialFrameTop: 50,
+        scaleEnabled: true
+    });
+
+</script>
+
+<div class="doc-container" id="doc-container">
+    <div class="container-fixed" style="background-color:white;padding:10px">
+        <div class="col-content" style="width:100%">
+            <form id="form" class="form-horizontal m">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label ">文章标题</label>
+                    <div class="col-sm-10">
+                        <input id="title" col="Title" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label ">摘要</label>
+                    <div class="col-sm-10">
+                        <textarea id="zhaiYao" col="ZhaiYao" type="text" class="form-control"
+                                  style="resize: vertical;">
+                    </textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label ">分类</label>
+                    <!-- 下拉列表的HTML结构 -->
+                    <select name="ClassId" lay-filter="ClassSelect" id="ClassSelect" style="padding:8px;margin-left:16px">
+                        <!-- 选项将通过Layui动态生成 -->
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label ">类型</label>
+                    <!-- 下拉列表的HTML结构 -->
+                    <select name="TypeId" lay-filter="TypeSelect" id="TypeSelect" style="padding:8px;margin-left:16px">
+                        <!-- 选项将通过Layui动态生成 -->
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label ">内容</label>
+                    <div class="col-sm-10">
+                        <textarea id="content" col="Content" class="editor"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top:50px;text-align:center">
+                    @if (ViewBag.Site.FeedbackStatus == "1")
+                    {
+                        <a class="layui-btn" onclick="saveForm()">发布</a>
+                    }
+                    else
+                    {
+                        <div style="text-align: center;">
+                            <span>功能已被关闭了哟～</span>
+                        </div>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@section js {
+
+    <script type="text/javascript">
+
+
+        var dataDict = {};
+
+        function getDataDict(dictType) {
+            var arr = [];
+            for (var i = 0; i < dataDict[dictType].length; i++) {
+                if (dataDict[dictType][i].DictStatus == 1) {
+                    arr.push(dataDict[dictType][i]);
+                }
+            }
+            return arr;
+        }
+        $(function () {
+            var ctx = '@Url.Content("~/")';
+            $.ajax({
+                url: ctx + 'SystemManage/DataDict/GetDataDictListJson',
+                type: "get",
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        for (var i = 0; i < obj.Data.length; i++) {
+                            dataDict[obj.Data[i].DictType] = obj.Data[i].Detail;
+                        } 
+
+                        // 页面加载完成后执行
+                        layui.use(['form', 'jquery'], function () {
+                            var form = layui.form;
+                            var $ = layui.jquery;
+
+
+                            // 初始化下拉列表
+                            form.render('select', 'ClassSelect');
+                            // 动态添加选项
+                            $('#ClassSelect').empty().append(getDataDict("BlogClass").map(function (item) {
+                                return '<option value="' + item.DictKey + '">' + item.DictValue + '</option>';
+                            }));
+
+
+                            // 初始化下拉列表
+                            form.render('select', 'TypeSelect');
+                            // 动态添加选项
+                            $('#TypeSelect').empty().append(getDataDict("BlogType").map(function (item) {
+                                return '<option value="' + item.DictKey + '">' + item.DictValue + '</option>';
+                            }));
+
+                            // 重新渲染，确保选项正确显示
+                            form.render('select');
+                        });
+                    }
+                }
+            });
+        });
+
+        function saveForm() {
+            var openid = $.cookie('openid');
+            if (openid != undefined && "" != openid) {
+
+                var postData = {};
+                postData.Title = $("#title").val();
+                postData.ZhaiYao = $("#zhaiYao").val();
+                postData.ClassId = $("#ClassSelect").val();
+                postData.TypeId = $("#TypeSelect").val();
+                postData.Author = $.cookie('UserSession');
+                postData.UserId = openid;
+                postData.TypeId = $("#TypeSelect").val();
+                postData.Content = ue.getContent();//document.getElementById("contents").value;
+                 
+                $.ajax({
+                    url: '@Url.Content("~/BlogManage/BlogArticle/PublishArticle")',
+                    type: 'post',
+                    data: postData,
+                    success: function (obj) {
+                        if (obj.Tag == 1) {
+                            layer.msg(obj.Message, {
+                                icon: 1
+                            });
+                            setTimeout(function () { window.location.reload(); }, 1000);
+                        }
+                        else {
+
+                            layer.msg(obj.Message, {
+                                icon: 2
+                            });
+                        }
+                    }
+                });
+            } else {
+                layer.msg("请先登录", {
+                    icon: 5
+                });
+            }
+
+        }
+    </script>
+
+}

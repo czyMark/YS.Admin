@@ -1,0 +1,65 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/introduction.css")" />
+}
+ 
+<div id="app3" class="wrap">
+    <div class="element-wrap">
+        <div class="con-main-wrap">
+            @if (ViewBag.details != null)
+            {
+                @Html.Raw(@ViewBag.details)
+            }
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+
+
+    const App3 = {
+        data() {
+            return {  
+            }
+        },
+        methods: {
+
+        },
+        mounted() {
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

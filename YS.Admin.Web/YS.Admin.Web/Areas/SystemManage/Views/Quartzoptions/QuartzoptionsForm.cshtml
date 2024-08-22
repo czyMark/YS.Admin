@@ -1,0 +1,173 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">任务名称</label>
+            <div class="col-sm-4">
+                <input id="taskName" col="TaskName" type="text" class="form-control" />
+            </div>
+
+            <label class="col-sm-2 control-label ">任务分组</label>
+            <div class="col-sm-4">
+                <input id="groupName" col="GroupName" type="text" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">任务状态</label>
+            <div class="col-sm-8" id="taskStatus" col="TaskStatus">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">执行方式</label>
+            <div class="col-sm-10" id="method" col="Method">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">请求地址</label>
+            <div class="col-sm-8">
+                <input id="apiUrl" col="ApiUrl" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+
+            <label class="col-sm-2 control-label ">权限key</label>
+            <div class="col-sm-4">
+                <textarea id="authKey" col="AuthKey" type="text" class="form-control"
+                          style="resize: vertical;">
+                    </textarea>
+            </div>
+
+            <label class="col-sm-2 control-label ">权限值</label>
+            <div class="col-sm-4">
+                <textarea id="authValue" col="AuthValue" type="text" class="form-control"
+                          style="resize: vertical;">
+                    </textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">参数</label>
+            <div class="col-sm-8">
+                <textarea id="postData" col="PostData" type="text" class="form-control"
+                          style="resize: vertical;">
+                    </textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">超时时间(秒)</label>
+            <div class="col-sm-4">
+                <input id="timeOut" col="TimeOut" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-2 control-label ">Corn表达式</label>
+            <div class="col-sm-4">
+                <input id="cronExpression" col="CronExpression" type="text" class="form-control" />
+                <a href="#" onclick="selectCorn()"> Corn表达式 工具界面</a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">任务开始时间</label>
+            <div class="col-sm-4">
+                <input id="startTime" col="StartTime" type="text" class="form-control" />
+            </div>  
+            <label class="col-sm-2 control-label ">任务结束时间</label>
+            <div class="col-sm-4">
+                <input id="endTime" col="EndTime" type="text" class="form-control" />
+            </div>
+        </div>
+         
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    $(function () {
+        $("#taskStatus").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(StatusEnum).EnumToDictionaryString())) });
+        $("#method").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(TaskMethodEnum).EnumToDictionaryString())) });
+        
+        laydate.render({ elem: '#startTime', type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss' });
+        laydate.render({ elem: '#endTime', type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss' });
+
+        getForm();
+        $('input[name=method_radiobox]').on('ifChecked', function (event) {
+            var type = $(event.target).val();
+            methodChange(type);
+        });
+        $('#form').validate({
+            rules: {
+                taskName: { required: true },
+                groupName: { required: true },
+                apiUrl: { required: true },
+                cronExpression: { required: true },
+                startTime: { required: true },
+                endTime: { required: true }
+            }
+        });
+    });
+    function selectCorn() {
+        window.open('https://cron.ciding.cc/ ', '_blank', 'noopener,noreferrer');
+    }
+    function methodChange(type) {
+        $("#apiUrl").attr("readonly", "readonly");
+        if (type == "@TaskMethodEnum.Get.ParseToInt()") {
+            $("#apiUrl").val("");
+            $("#apiUrl").removeAttr("readonly");
+        } else if (type == "@TaskMethodEnum.Post.ParseToInt()") {
+            $("#apiUrl").val("");
+            $("#apiUrl").removeAttr("readonly");
+        } else if (type == "@TaskMethodEnum.LocalExe.ParseToInt()") {
+            $("#apiUrl").val("job/local");
+        } else if (type == "@TaskMethodEnum.Sql.ParseToInt()") {
+            $("#apiUrl").val("job/proc");
+        } else if (type == "@TaskMethodEnum.Other.ParseToInt()") {
+            $("#apiUrl").val("job/message");
+        }
+    }
+
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/SystemManage/Quartzoptions/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $('#form').setWebControls(obj.Data);
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id });
+            ys.ajax({
+                url: '@Url.Content("~/SystemManage/Quartzoptions/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+</script>
+

@@ -1,0 +1,162 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_Index.cshtml";
+}
+<div class="container-div">
+    <div class="row">
+        <div id="searchDiv" class="col-sm-12 search-collapse">
+            <div class="select-list">
+                <ul>
+                    <li>
+                        任务名称：<input id="taskName" col="TaskName" type="text" />
+                        任务分组 ：<input id="groupName" col="GroupName" type="text" />
+                    </li>
+                    <li>
+                        <a id="btnSearch" class="btn btn-primary btn-sm" onclick="searchGrid()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="btn-group-sm hidden-xs" id="toolbar">
+            <a id="btnAdd" class="btn btn-success" onclick="showSaveForm(true)"><i class="fa fa-plus"></i> 新增</a>
+            <a id="btnEdit" class="btn btn-primary disabled" onclick="showSaveForm(false)"><i class="fa fa-edit"></i> 修改</a>
+            <a id="btnDelete" class="btn btn-danger disabled" onclick="deleteForm()"><i class="fa fa-remove"></i> 删除</a>
+            <a id="btnLog" class="btn btn-info" onclick="showAutoJobLogForm()"><i class="fa fa-list"></i> 日志</a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="gridTable" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        initGrid();
+    });
+
+    function initGrid() {
+        var queryUrl = '@Url.Content("~/SystemManage/Quartzoptions/GetPageListJson")';
+        $('#gridTable').ysTable({
+            url: queryUrl,
+            columns: [
+                { checkbox: true, visible: true },
+                { field: 'Id', title: 'Id', visible: false },
+                { field: 'TaskName', title: '任务名称' },
+                { field: 'GroupName', title: '任务分组' },
+                {
+                    field: 'TaskStatus', title: '任务状态', align: 'center',
+                    formatter: function (value, row, index) {
+                        if (value == "@StatusEnum.Yes.ParseToInt()") {
+                            return '<span class="badge badge-primary">' + "@StatusEnum.Yes.GetDescription()" + '</span>';
+                        } else {
+                            return '<span class="badge badge-warning">' + "@StatusEnum.No.GetDescription()" + '</span>';
+                        }
+                    }
+                },
+                { field: 'Remark', title: '备注' },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        if (row.TaskStatus == "@StatusEnum.Yes.ParseToInt()") {
+                            actions.push('<a class="btn btn-primary btn-xs" href="#" onclick="ChangeJobStatus(\'' + row.Id + '\',@StatusEnum.No.ParseToInt())"><i class="fa fa-pause-circle-o"></i>暂停</a> ');
+                        } else {
+                            actions.push('<a class="btn btn-primary btn-xs" href="#" onclick="ChangeJobStatus(\'' + row.Id + '\',@StatusEnum.Yes.ParseToInt())"><i class="fa fa-play-circle-o"></i>执行</a> ');
+                        }
+                        return actions.join('');
+                    }
+                }
+            ],
+            queryParams: function (params) {
+                var pagination = $('#gridTable').ysTable('getPagination', params);
+                var queryString = $('#searchDiv').getWebControls(pagination);
+                return queryString;
+            }
+        });
+    }
+
+    function searchGrid() {
+        $('#gridTable').ysTable('search');
+        resetToolbarStatus();
+    }
+
+    function showSaveForm(bAdd) {
+        var id = 0;
+        if (!bAdd) {
+            var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+            if (!ys.checkRowEdit(selectedRow)) {
+                return;
+            }
+            else {
+                id = selectedRow[0].Id;
+            }
+        }
+        showEdit(id)
+    }
+    function showEdit(id) {
+        ys.openDialog({
+            title: id > 0 ? '编辑' : '添加',
+            content: '@Url.Content("~/SystemManage/Quartzoptions/QuartzoptionsForm")' + '?id=' + id,
+            width: '768px',
+            height: '550px',
+            callback: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.saveForm(index);
+            }
+        });
+    }
+
+
+
+
+    function ChangeJobStatus( id, taskStatus) {
+        var postData = {};
+        postData.Id = id;
+        postData.TaskStatus = taskStatus;
+        ys.ajax({
+            url: '@Url.Content("~/SystemManage/Quartzoptions/ChangeTaskStatusJson")',
+            type: "post",
+            data: postData,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    ys.msgSuccess(obj.Message);
+                    searchGrid();
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        });
+    }
+
+
+
+
+    function deleteForm() {
+        var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+        if (ys.checkRowDelete(selectedRow)) {
+            ys.confirm('确认要删除选中的' + selectedRow.length + '条数据吗？', function () {
+                var ids = ys.getIds(selectedRow);
+                ys.ajax({
+                    url: '@Url.Content("~/SystemManage/Quartzoptions/DeleteFormJson")' + '?ids=' + ids,
+                    type: 'post',
+                    success: function (obj) {
+                        if (obj.Tag == 1) {
+                            ys.msgSuccess(obj.Message);
+                            searchGrid();
+                        }
+                        else {
+                            ys.msgError(obj.Message);
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+
+    function showAutoJobLogForm() {
+        var url = '@Url.Content("~/SystemManage/Quartzlog/QuartzlogIndex")';
+        createMenuItem(url, "执行任务日志");
+    }
+</script>

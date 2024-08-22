@@ -1,0 +1,112 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    line-height: 1;
+    font-size: 12px;
+}
+.wrap {
+    padding: 0 1em;
+}
+.logo {
+    margin: 0.75em 0;
+    width: 5.75em;
+}
+.element-wrap {
+    margin: 0 auto;
+    background: #fcfbfc;
+    min-height: 500px;
+    border-radius: 0.46em;
+    border: 0.333em solid #447f64;
+    overflow: hidden;
+}
+.element-wrap .phone-banner {
+    width: 100%;
+}
+.cen-wrap {
+    width: 27.20833em;
+    margin: 0 auto;
+    padding: 1.35em 3.16em 1.5em;
+    background: #ffffff;
+    border-radius: 0.416em;
+    border: 1px solid #447f64;
+}
+.cen-wrap img {
+    max-width: 100%;
+}
+.wrap .el-carousel__arrow {
+    display: none;
+}
+.wrap .el-carousel__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.wrap .el-carousel__indicators--horizontal {
+    bottom: 0em;
+    padding: 0;
+}
+.wrap .el-carousel__button {
+    width: 0.6em;
+    height: 0.6em;
+    background: #b1b1b1;
+    border-radius: 50%;
+    margin: 0 0.3em;
+}
+
+.wrap .el-carousel__indicator--horizontal {
+    padding: 0;
+}
+.wrap .el-carousel__indicators--horizontal .is-active .el-carousel__button {
+    background-color: #447f64;
+}
+.wrap .right {
+    width: 27.20833em;
+    margin: 0.4em auto;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.83em;
+    background-color: #f0f6f4;
+}
+
+.info-item .label {
+    width: 0;
+    flex: 1;
+    color: #447f64;
+    line-height: 2.5em;
+    padding-left: 1.6em;
+}
+
+.info-item .titles {
+    width: 6.79em;
+    color: #212121;
+    padding: 0 0 0 1.6em;
+    line-height: 2.5em;
+    border-right: 1px solid #e9e8dd;
+}
+
+.active {
+    background-color: #ffffff;
+}
+.times {
+    position: relative;
+    width: 100%;
+    padding-right: 1em;
+    text-align: right;
+    box-sizing: border-box;
+    margin: 3em auto 1.4em;
+    font-family: Source Han Sans CN;
+    font-size: 0.83em;
+    color: #212121;
+    height: 0.79em;
+    font-weight: 400;
+}
+.times img {
+    position: absolute;
+    width: 6.29em;
+    right: 1em;
+    top: -5em;
+}

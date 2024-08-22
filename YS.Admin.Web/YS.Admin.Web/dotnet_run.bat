@@ -1,0 +1,1 @@
+dotnet YS.Admin.Web.dll --urls http://localhost:5005

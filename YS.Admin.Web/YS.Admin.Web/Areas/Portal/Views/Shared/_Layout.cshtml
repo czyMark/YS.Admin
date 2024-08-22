@@ -1,0 +1,142 @@
+﻿@using YS.Admin.Util
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <meta name="keywords" content="北京国正收藏品鉴定评估有限公司">
+    <meta name="description" content="北京国正收藏品鉴定评估有限公司">
+
+    <link rel="bookmark" href='@Url.Content("~/favicon.ico")' />
+    <link rel="shortcut icon" href="@Url.Content("~/favicon.ico")" type="image/x-icon" />
+
+    <script type="text/javascript" src='@Url.Content("~/lib/jquery/2.1.4/jquery.min.js")'></script>
+    <script type="text/javascript" src='@Url.Content("~/js/vue/index.js")'></script>
+    <script type="text/javascript" src='@Url.Content("~/js/index.full.js")'></script>
+    <link rel="stylesheet" href="@Url.Content("~/css/global.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/css/index.css")" />
+
+
+
+    @* <script src="https://unpkg.com/element-plus@2.7.8/dist/index.full.js"></script> *@
+
+    @* <script type="text/javascript" src='@Url.Content("~/js/vue/index.js")'></script>
+    <script type="text/javascript" src='@Url.Content("~/js/css/index.css")'></script>
+    <script type="text/javascript" src='@Url.Content("~/js/axios.min.js")'></script> *@
+    @*
+    *@
+    @* <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> *@
+    <!--首页需要用到的js结束-->
+    @RenderSection("header", false)
+    <title>国正</title>
+
+    <style scoped>
+        .el-submenu .el-menu-item-group {
+            margin: 100px;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="con-main-wrap" ref="topSection">
+            <a href="~/Portal/Viewinfo/index">
+                <img class="logo" src="@Url.Content("/images/logo.png")" alt="logo" />
+            </a>
+        </div>
+        <div class="menu" ref="menuSection">
+            <div class="con-main-wrap">
+                <el-menu class="el-menu-demo" mode="horizontal" background-color="#447f64" text-color="#fff"
+                         active-text-color="#fff" :default-active="menuList[0].id" :open="true">
+                    <menu-item class="styles" style="font-weight: bold;width: 10%;" v-for="(item, index) in menuList"
+                               :key="index" :item="item"></menu-item>
+                </el-menu>
+            </div>
+        </div>
+        @if (ViewBag.banner != null)
+        {
+            <a href="@ViewBag.bannerUrl">  <img class="banner" src="@ViewBag.banner" alt="banner" /> </a>
+        }
+    </div>
+
+    @RenderBody()
+
+
+
+    <div class="footer-info">
+        <div class="con-main-wrap">
+            @ViewBag.WebCord 版权所有：@ViewBag.AllRight
+        </div>
+    </div>
+
+
+
+    <script>
+
+        const App = {
+            data() {
+                return {
+                    menuList: @Html.Raw(@ViewBag.muendata),
+                    formInline: {
+                        CertificateNo: '',
+                        RatingNumberQuery: '',
+                        BigData: ''
+                    }
+                }
+            },
+            methods: {
+
+            },
+            mounted() {
+            },
+            beforeUnmount() {
+
+            },
+            components: {
+                menuItem: {
+                    props: ['item'],
+                    template: `
+                                                                                                  <div >
+                                                                          <el-menu-item   v-if="!item.children || item.children.length < 1"    :index="item.id"   >
+                                                                            <a :href="item.href">
+                                                                                                      <img class="menu-right" src="@Url.Content("/images/global/right.svg")" alt="" />
+                                                                              {{ item.title }}
+                                                                            </a>
+                                                                          </el-menu-item>
+                                                                                  <el-sub-menu  v-else   :index="item.id"   >
+                                                                                    <template #title>
+                                                                              <a class='xiala' :href="item.href" >{{ item.title }}</a>
+                                                                                      <img class="custom-submenu-icon" src="@Url.Content("/images/menu/jjiantou.png")" alt="" />
+                                                                            </template>
+                                                                                    <menu-item
+                                                                              v-for="(child, index) in item.children"
+                                                                              :key="index"  :item="child" ></menu-item>
+                                                                          </el-sub-menu>
+                                                                        </div>
+                                                                                        `
+                }
+            }
+        };
+
+        const app = Vue.createApp(App);
+        app.use(ElementPlus);
+        app.component('menu-item', App.components.menuItem); // 全局注册 menuItem 组件
+        app.mount('#app');
+
+
+        app3init();
+    </script>
+
+</body>
+</html>

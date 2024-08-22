@@ -1,0 +1,269 @@
+.wrap {
+    background-color: #f8fafa;
+}
+
+.element-wrap {
+    padding-top: 61px;
+}
+
+.element-wrap .con-main-wrap {
+    width: 1200px;
+    min-height: 1152px;
+    padding: 0 0 36px;
+    background: #fcfbfc;
+    border-radius: 10px;
+    border: 8px solid #447f64;
+}
+
+.header-bg {
+    width: 100%;
+}
+.demonstration {
+    color: var(--el-text-color-secondary);
+  }
+  
+  .el-carousel__item h3 {
+    color: #475669;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: 0;
+    text-align: center;
+  }
+  
+  .el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+  }
+  
+  .el-carousel__item:nth-child(2n + 1) {
+    background-color: #d3dce6;
+  }
+.cen-wrap {
+    position: relative;
+    align-items: flex-start;
+    gap: 30px;
+    width: 1152px;
+    min-height: 765px;
+    margin: 19px auto;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #447f64;
+    padding: 34px 24px;
+}
+
+.goods-img {
+    height: 551px;
+    width: 507px;
+    overflow: hidden;
+}
+
+.goods-img-item {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.cen-wrap .right {
+    width: 0;
+    flex: 1;
+}
+
+.wrap .el-carousel__arrow {
+    display: none;
+}
+
+.list {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.list .shang,
+.list .xia {
+    width: 24px;
+    height: 64px;
+}
+
+.list img {
+    height: 64px;
+    cursor: pointer;
+}
+
+.xin {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.info-item {
+    font-size: 20px;
+    background-color: #f0f6f4;
+}
+
+.info-item .label {
+    width: 0;
+    flex: 1;
+    color: #447f64;
+    line-height: 60px;
+    padding-left: 40px;
+}
+
+.info-item .titles {
+    width: 180px;
+    color: #212121;
+    padding: 0 0 0 40px;
+    line-height: 60px;
+    border-right: 1px solid #e9e8dd;
+}
+
+.active {
+    background-color: #ffffff;
+}
+
+.cen-box {
+    gap: 60px;
+    margin-top: 36px;
+}
+
+.btns {
+    gap: 10px;
+    width: 241px;
+    height: 63px;
+    cursor: pointer;
+    background: #404040;
+    border-radius: 10px;
+    color: #fff;
+    line-height: 63px;
+    text-align: center;
+    font-size: 25px;
+}
+.all {
+    width: 1200px;
+    margin: 30px auto;
+    padding-bottom: 50px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    border: 3px solid #447f64;
+}
+
+.all .title {
+    font-size: 25px;
+    color: #212121;
+    margin: 25px 0;
+    text-align: center;
+}
+
+.all .cate-title {
+    justify-content: flex-start;
+    padding-left: 50px;
+    gap: 1px;
+    height: 57px;
+    background-color: #447f64;
+}
+
+.all .cate-title .item {
+    align-items: center;
+    padding: 15px 47px;
+    gap: 5px;
+    font-size: 24px;
+    height: 57px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.all .cate-title .item img {
+    width: 10px;
+}
+
+.all .cate-title .item:hover,
+.all .cate-title .active {
+    color: #447f64;
+    background-color: #fff;
+}
+
+.table-list {
+    overflow: auto;
+    padding: 16px 0;
+    background-color: #f0f0f0;
+}
+
+.table-list .title-top {
+    display: flex;
+    background-color: #f0f6f4;
+}
+
+.table-list .title-top .item {
+    /* flex: 1; */
+    padding: 0 15px;
+    text-align: center;
+    font-size: 20px;
+    height: 50px;
+    line-height: 50px;
+    color: #447f64;
+    border: 1px solid #f0f0f0;
+}
+
+.info {
+    display: flex;
+    gap: 40px;
+    /* font-family: Source Han Sans CN; */
+    font-size: 20px;
+    color: #212121;
+    margin-top: 38px;
+}
+
+.btn {
+    width: 241px;
+    height: 63px;
+    color: #fff;
+    background: #404040;
+    border-radius: 10px;
+    /* font-family: PingFang SC; */
+    font-size: 25px;
+    line-height: 63px;
+    text-align: center;
+    margin: 30px auto;
+    cursor: pointer;
+}
+
+.times {
+    position: relative;
+    margin-right: 24px;
+    text-align: right;
+    margin-left: auto;
+    margin-top: 45px;
+    margin-bottom: 37px;
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #212121;  
+    height: 19px;
+    font-weight: 400;
+}
+.times img {
+    position: absolute;
+    width: 151px;
+    height: 151px;
+    bottom: -18px;
+    right: -2px;
+}
+
+.copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0 8px;
+    gap: 4px;
+}
+.copy .list {
+    display: none;
+}
+.copy .goods-img {
+    height: auto;
+    width: 100%;
+}
+.copy .right {
+    width: 100%;
+}
+
+.copy-box {
+    display: none;
+}

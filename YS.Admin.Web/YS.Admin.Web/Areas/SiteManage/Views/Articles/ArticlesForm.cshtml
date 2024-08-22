@@ -1,0 +1,265 @@
+﻿@{
+	Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section header {
+
+	@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/css/imgup.min.css"))
+	@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/js/imgup.min.js"))
+
+	@*     @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.config.js"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.all.js"))*@
+
+	@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.css"))
+	@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js"))
+
+}
+<script src="~/lib/ueditor/ueditor.config.js"></script>
+<script src="~/lib/ueditor/ueditor.all.js"></script>
+<script>
+	//编辑器初始化
+	var ue = UE.getEditor('contents', {
+		initialFrameWidth: '98%',
+		initialFrameHeight: 280,
+		initialFrameTop: 50,
+		scaleEnabled: true
+	});
+
+	//编辑器初始化
+	var ueExplanatory = UE.getEditor('explanatory', {
+		initialFrameWidth: '98%',
+		initialFrameHeight: 280,
+		initialFrameTop: 50,
+		scaleEnabled: true
+	});
+</script>
+<div class="wrapper animated fadeInRight">
+	<form id="form" class="form-horizontal m">
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">文章标题<font class="red"> *</font></label>
+			<div class="col-sm-6">
+				<input id="title" col="Title" type="text" class="form-control" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">文章副标题</label>
+			<div class="col-sm-4">
+				<input id="subTitle" col="SubTitle" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-2 control-label ">送评地址</label>
+            <div class="col-sm-4">
+				<input id="courier" col="Courier" type="text" class="form-control" />
+            </div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">状态</label>
+			<div class="col-sm-4" id="status" col="Status"></div>
+			<label class="col-sm-2 control-label ">添加时间</label>
+			<div class="col-sm-4">
+				<input id="baseCreateTime" col="BaseCreateTime" type="text" class="form-control" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">作者</label>
+			<div class="col-sm-4">
+				<input id="author" col="Author" type="text" class="form-control" />
+			</div>
+			<label class="col-sm-2 control-label ">来源</label>
+			<div class="col-sm-4">
+				<input id="source" col="Source" type="text" class="form-control" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">是否置顶</label>
+			<div class="col-sm-4" id="isTop" col="IsTop"></div>
+			<label class="col-sm-2 control-label ">是否热门</label>
+			<div class="col-sm-4" id="isHot" col="IsHot"></div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">是否推荐</label>
+			<div class="col-sm-4" id="isRed" col="IsRed"></div>
+			<label class="col-sm-2 control-label ">排序</label>
+			<div class="col-sm-4">
+				<input id="sortId" col="SortId" type="text" class="form-control" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">跳转链接</label>
+			<div class="col-sm-4">
+				<input id="linkUrl" col="LinkUrl" type="text" class="form-control" />
+			</div>
+			<label class="col-sm-2 control-label ">快递方式</label>
+			<div class="col-sm-4">
+				<input id="express" col="Express" type="text" class="form-control" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">
+				<span>图片</span>
+				@*<span>(宽高比 1.5：1)</span>*@
+			</label>
+			<div class="col-sm-4">
+				<div id="imgUrl" class="img-box">
+				</div>
+			</div>
+			<label class="col-sm-2 control-label ">摘要</label>
+			<div class="col-sm-4">
+				<textarea id="zhaiYao" col="ZhaiYao" maxlength="500" class="form-control valid" rows="5"></textarea>
+			</div>
+		</div>
+		@*    <div class="form-group">
+		<label class="col-sm-3 control-label ">Regions</label>
+		<div class="col-sm-8">
+		<input id="regions" col="Regions" type="text" class="form-control" />
+		</div>
+		</div>*@
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">说明文本</label>
+			<div class="col-sm-10">
+				<textarea id="explanatory" col="Explanatory" class="editor"></textarea>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">正文</label>
+			<div class="col-sm-10">
+				<textarea id="contents" col="Contents" class="editor"></textarea>
+			</div>
+		</div>
+		<h4 class="form-header h4">SEO信息</h4>
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">SEO标题</label>
+			<div class="col-sm-8">
+				<input id="seoTitle" col="SeoTitle" type="text" class="form-control" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">SEO关健字</label>
+			<div class="col-sm-8">
+				<input id="seoKeywords" col="SeoKeywords" type="text" class="form-control" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">SEO描述</label>
+			<div class="col-sm-8">
+				<textarea id="seoDescripiton" name="SeoDescripiton" col="SeoDescripiton" maxlength="500" class="form-control valid" rows="3"></textarea>
+			</div>
+		</div>
+		<input id="categoryId" col="CategoryId" type="hidden" class="form-control" />
+	</form>
+</div>
+<script type="text/javascript">
+	var id = ys.request("id");
+	var categoryId = ys.request("categoryId");
+	$(function () {
+		laydate.render({ elem: '#baseCreateTime', type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss' });
+		$("#status").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(ShowEmum).EnumToDictionaryString())) });
+		$("#isTop").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(IsEnum).EnumToDictionaryString())) });
+		$("#isRed").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(IsEnum).EnumToDictionaryString())) });
+		$("#isHot").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(IsEnum).EnumToDictionaryString())) });
+		$("#imgUrl").imageUpload({ uploadImage: 'uploadThumbImage', limit: 1, context: ctx });
+		getForm();
+
+		$('#form').validate({
+			rules: {
+				title: { required: true }
+			}
+		});
+	});
+
+	function getForm() {
+		if (id > 0) {
+			ys.ajax({
+				url: '@Url.Content("~/SiteManage/Articles/GetFormJson")' + '?categoryId=' + categoryId + '&id=' + id,
+				type: 'get',
+				success: function (obj) {
+					if (obj.Tag == 1) {
+						$("#imgUrl").imageUpload("setImageUrl", obj.Data.ImgUrl);
+						$('#form').setWebControls(obj.Data);
+						//document.getElementById("seoDescripiton").value=obj.Data.SeoDescripiton;
+						//document.getElementById("zhaiYao").value=obj.Data.ZhaiYao;
+						//console.log(obj.Data.Contents)
+						document.getElementById("contents").value = obj.Data.Contents;
+						//console.log(obj.Data.Contents.length);
+						if (obj.Data.Contents.length > 0) {
+							ue.ready(function () {
+								//设置编辑器的内容
+								ue.setContent(obj.Data.Contents);
+							});
+						}
+						 
+						document.getElementById("explanatory").value = obj.Data.Explanatory;
+						if (obj.Data.Explanatory.length > 0) {
+							ueExplanatory.ready(function () {
+								//设置编辑器的内容
+								ueExplanatory.setContent(obj.Data.Explanatory);
+							});
+						}
+					}
+				}
+			});
+		}
+		else {
+			var defaultData = {
+				CategoryId: categoryId,
+				Status: 0,
+				IsRed: 0,
+				IsHot: 0,
+				IsTop: 0,
+				SortId: 99,
+			};
+			defaultData.BaseCreateTime = '@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")';
+			$('#form').setWebControls(defaultData);
+		}
+	}
+
+	function saveForm(index) {
+		if ($('#form').validate().form()) {
+			var postData = $('#form').getWebControls({ Id: id });
+			postData.ImgUrl = $("#imgUrl").imageUpload("getImageUrl");
+			//postData.SeoDescripiton=document.getElementById("seoDescripiton").value;
+			//postData.ZhaiYao= document.getElementById("zhaiYao").value;
+			postData.Contents = ue.getContent();//document.getElementById("contents").value;
+			postData.Explanatory = ueExplanatory.getContent();//document.getElementById("contents").value;
+			
+			ys.ajax({
+				url: '@Url.Content("~/SiteManage/Articles/SaveFormJson")',
+				type: 'post',
+				data: postData,
+				success: function (obj) {
+					if (obj.Tag == 1) {
+						ys.msgSuccess(obj.Message);
+						parent.searchGrid();
+						parent.layer.close(index);
+					}
+					else {
+						ys.msgError(obj.Message);
+					}
+				}
+			});
+		}
+	}
+
+	function uploadThumbImage(file, callback) {
+		var formdata = new FormData();
+		formdata.append("fileList", file[0]);
+		ys.ajaxUploadFile({
+			url: '/File/UploadFile?fileModule=@UploadFileType.News.ParseToInt()',
+			data: formdata,
+			success: function (obj) {
+				if (obj.Tag == 1) {
+					if (callback) {
+						//callback('@GlobalContext.SystemConfig.ApiSite' + obj.Data);
+						callback(obj.Data);
+					}
+				}
+				else {
+					ys.msgError(obj.Message);
+				}
+			}
+		})
+	}
+</script>
+

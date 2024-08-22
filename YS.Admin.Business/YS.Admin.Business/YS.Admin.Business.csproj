@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="新文件夹1\**" />
+    <EmbeddedResource Remove="新文件夹1\**" />
+    <None Remove="新文件夹1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\YS.Admin.Entity\YS.Admin.Entity\YS.Admin.Entity.csproj" />
+    <ProjectReference Include="..\..\YS.Admin.Entity\YS.Admin.Enum\YS.Admin.Enum.csproj" />
+    <ProjectReference Include="..\..\YS.Admin.Util\YS.Admin.CodeGenerator\YS.Admin.CodeGenerator.csproj" />
+    <ProjectReference Include="..\YS.Admin.Business.Cache\YS.Admin.Business.Cache.csproj" />
+    <ProjectReference Include="..\YS.Admin.Service\YS.Admin.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ShortLInk\" />
+    <Folder Include="ToolManage\" />
+  </ItemGroup>
+
+</Project>

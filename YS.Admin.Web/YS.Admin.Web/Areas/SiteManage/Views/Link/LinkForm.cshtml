@@ -1,0 +1,178 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section header{
+
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/css/imgup.min.css"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/js/imgup.min.js"))
+
+@*     @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.config.js"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.all.js"))*@
+
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.css"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js"))
+}
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">链接标题<font class="red"> *</font></label>
+            <div class="col-sm-8">
+                <input id="title" col="Title" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">联系人</label>
+            <div class="col-sm-8">
+                <input id="userName" col="UserName" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">联系电话</label>
+            <div class="col-sm-8">
+                <input id="userTel" col="UserTel" type="text" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">链接类型</label>
+            <div class="col-sm-8">
+                <span id="linkType" col="LinkType"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">链接图片</label>
+            <div class="col-sm-8">
+                  <div id="imgUrl" class="img-box">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">链接地址<font class="red"> *</font></label>
+            <div class="col-sm-8">
+                <input id="siteUrl" col="SiteUrl" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">排序</label>
+            <div class="col-sm-8">
+                <input id="sortId" col="SortId" type="text"  class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">状态</label>
+            <div class="col-sm-8">
+               <div class="col-sm-8" id="isLock" col="IsLock"></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    $(function () {
+
+
+         $("#isLock").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(ShowEmum).EnumToDictionaryString())) });
+         $("#imgUrl").imageUpload({ uploadImage: 'uploadThumbImage', limit: 1, context: ctx });
+        getForm();
+
+        $('#form').validate({
+            rules: {
+                title: { required: true },
+                sortId:{number:true,digits:true},
+                siteUrl: { required: true },
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/SiteManage/Link/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $("#imgUrl").imageUpload("setImageUrl", obj.Data.ImgUrl);
+                        // $('#form').setWebControls(obj.Data);
+
+                         
+                        $('#form').setWebControls(obj.Data);
+
+                        $("#linkType").text("");
+
+                        $("#linkType").ysComboBox({
+                            data: [
+                                { Key: '0', Value: '以下组织官方评级机构' },
+                                { Key: '1', Value: '以下公司认可的评级机构' }
+                            ],
+                            key: "Key",
+                            value: "Value",
+                            class: "form-control"
+                        });
+                        $("#linkType").ysComboBox("setValue", obj.Data.LinkType);
+
+
+                    }
+                }
+            });
+        }
+        else {
+
+            $("#linkType").ysComboBox({
+                data: [
+                    { Key: '0', Value: '以下组织官方评级机构' },
+                    { Key: '1', Value: '以下公司认可的评级机构' }
+                ],
+                key: "Key",
+                value: "Value",
+                class: "form-control"
+            });
+
+            var defaultData = {IsLock:1,SortId:0};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id });
+             postData.ImgUrl = $("#imgUrl").imageUpload("getImageUrl");
+            ys.ajax({
+                url: '@Url.Content("~/SiteManage/Link/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+      function uploadThumbImage(file, callback) {
+        var formdata = new FormData();
+        formdata.append("fileList", file[0]);
+        ys.ajaxUploadFile({
+            url: '/File/UploadFile?fileModule=@UploadFileType.News.ParseToInt()',
+            data: formdata,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    if (callback) {
+                        //callback('@GlobalContext.SystemConfig.ApiSite' + obj.Data);
+                        callback(obj.Data);
+                    }
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        })
+    }
+</script>
+

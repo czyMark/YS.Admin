@@ -1,0 +1,271 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/home.css")" />
+    <style>
+        .dropdown-container {
+            width: 81px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgb(70, 130, 101);
+            border-bottom-left-radius: 8px;
+            border-top-left-radius: 8px;
+            position: relative;
+            cursor: pointer;
+            background-color: #fff;
+        }
+
+        .dropdown-menu {
+            display: none; /* Initially hidden */
+            position: absolute;
+            top: calc(100% + 3px); /* Positioned below the container */
+            left: 0;
+            width: 100%;
+            border-radius: 8px;
+            /* border: 1px solid rgb(70, 130, 101); */
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+            .dropdown-menu span {
+                display: block;
+                padding: 10px;
+                cursor: pointer;
+                color: #333;
+            }
+
+                .dropdown-menu span:hover {
+                    background-color: #f0f0f0;
+                }
+
+                .dropdown-menu span.selected {
+                    background-color: #d0f0c0;
+                }
+
+        .selected-item {
+            font-size: 16px;
+            color: #525252
+        }
+    </style>
+}
+<div id="app3" class="wrap">
+    <div class="banner">
+        <el-carousel :style="{ height: bannerHeight + 'px' }">
+            <el-carousel-item :style="{ height: bannerHeight + 'px' }" v-for="(item,index) in swiperList"
+                              :key="index">
+                <a :href="item.LinkUrl" :alt="item.Title" target="_blank">  <img :src="item.PcFilePath" alt="" /> </a>
+            </el-carousel-item>
+        </el-carousel>
+    </div>
+
+    <div class="search-wrap con-main-wrap" ref="searchSection">
+        <div class="search-item">
+            <div class="title">查询验证</div>
+            <el-form :inline="true" :model="formInline" ref="formInline" class="demo-form-inline">
+                <el-form-item prop="CertificateNo">
+                    <el-input v-model="formInline.CertificateNo" id="CertificateNo" placeholder="证书编号查询" clearable />
+                </el-form-item>
+                <el-form-item prop="RatingNumberQuery">
+                    <el-input v-model="formInline.RatingNumberQuery" id="RatingNumberQuery" placeholder="鉴定编号查询" clearable />
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" onclick="selectData()">查询</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+        <div class="search-item1">
+
+            <div class="title">大数据</div>
+            <el-form :inline="true" class="demo-form-inline">
+                <el-form-item prop="BigData">
+                    <div class="dropdown-container" onclick="toggleDropdown()">
+                        <div id="selected-item" class="selected-item">
+                            纸币
+                        </div>
+                        <div id="dropdown-menu" class="dropdown-menu">
+                            <span onclick="selectItem('纸币')">纸币</span>
+                            <span onclick="selectItem('邮票')">邮票</span>
+                            <span onclick="selectItem('硬币')">硬币</span>
+                        </div>
+                    </div>
+                    <el-input id="BigData" style="width: 182px;" v-model="formInline.BigData"
+                              placeholder="藏品查询" clearable />
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" v-on:click="bigData()">查询</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </div>
+
+
+
+    <div class="footer-wrap">
+        <div class="title-wrap">
+            <p></p>
+            <div class="title">@ViewBag.title</div>
+            <p></p>
+        </div>
+        <div class="label">@Html.Raw(@ViewBag.lable)</div>
+    </div>
+    <div class="href-wrap">
+        <div class="title-wrap con-main-wrap">
+            <div class="title">友情链接</div>
+            <p> | </p>
+            <a href="~/Portal/Viewinfo/href" class="label">
+                查看更多
+                <img src="/images/home/icon1.png" alt="" />
+            </a>
+        </div>
+        <div class="list con-main-wrap" id="hrefwrap">
+            <a class="item" :href="item.SiteUrl" target="_blank" v-for="(item, index) in hrefList" :key="index">
+                <img :src="item.ImgUrl" alt="" />
+            </a>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdown-menu');
+        menu.style.setProperty('display', (menu.style.display === 'block') ? 'none' : 'block', 'important');
+    }
+
+    function selectItem(value) {
+        const selectedItem = document.getElementById('selected-item');
+        selectedItem.textContent = value;
+        console.log("Before toggleDropdown:", document.getElementById('dropdown-menu').style.display);
+        toggleDropdown(); // Close the menu after selection
+        console.log("After toggleDropdown:", document.getElementById('dropdown-menu').style.display);
+
+    }
+
+    // Close the dropdown if clicked outside
+    document.addEventListener('click', function (event) {
+        const isClickInside = document.querySelector('.dropdown-container').contains(event.target);
+        if (!isClickInside) {
+            document.getElementById('dropdown-menu').style.display = 'none';
+        }
+    });
+
+
+    function selectData() {
+        var IDCode = $("#RatingNumberQuery").val();
+        var CertificateNo = $("#CertificateNo").val();
+        if (IDCode.length > 0) {
+            //根据id查询
+            window.open("~/Portal/Viewinfo/ratingCertificateIDCode?IDCode=" + IDCode, '_self')
+        } else if (CertificateNo.length > 0) {
+            window.open("~/Portal/Viewinfo/showCertificate?IDCode=" + CertificateNo , '_self')
+        } else {
+            alert("请输入证书编号或鉴定编号");
+        }
+    }
+
+
+
+    const App3 = {
+        data() {
+            return {
+                selected: '纸币',
+                options: [
+                    { value: '1', label: '纸币' },
+                    { value: '2', label: '邮票' },
+                    { value: '3', label: '硬币' }
+                ],
+                bannerHeight: 0,
+                // 满哥 这个是轮播图的
+                swiperList: @Html.Raw(@ViewBag.swiperList),
+                formInline: {
+                    CertificateNo: '',
+                    RatingNumberQuery: '',
+                    BigData: '',
+                },
+                hrefList: @Html.Raw(@ViewBag.hrefList)
+                                 }
+        },
+        methods: {
+            updateBannerHeight() {
+                //需要修改成 jq获取
+                // const topSectionHeight = this.$refs.topSection.offsetHeight;
+                // const menuSectionHeight = this.$refs.menuSection.offsetHeight;
+                const searchSectionHeight = this.$refs.searchSection.offsetHeight;
+                const windowHeight = window.innerHeight;
+                // this.bannerHeight = windowHeight - topSectionHeight - menuSectionHeight - searchSectionHeight - 100;
+                this.bannerHeight = windowHeight - searchSectionHeight - 100;
+
+            },
+            bigData() {
+                if (this.formInline.BigData.length == 0) {
+                    window.open("~/Portal/Viewinfo/bigdataNav", '_self')
+                } else {
+                    //查询所有tag是否存在输入
+                    var queryUrl = '@Url.Content("~/Portal/ViewInfo/VerifyBigdataTag")?TagName=' + this.formInline.BigData;
+                    $.ajax({
+                        url: queryUrl,
+                        method: 'GET',
+                        success: (obj) => {
+                            if (obj.Tag == 1) {
+                                //直接跳转到大数据界面
+                                window.open("~/Portal/Viewinfo/bigdata?TagName=" + this.formInline.BigData, '_self')
+                            } else {
+
+                                alert(obj.Message);
+                            }
+                        },
+                        error: (jqXHR, textStatus, errorThrown) => {
+                            alert('Error fetching data:' + textStatus + errorThrown);
+                        }
+                    });
+                }
+            },
+            findDataTag() {
+                var t = $("#BigData").val();
+                if (t.length == 0) {
+                    window.open("~/Portal/Viewinfo/bigdataNav", '_self')
+                }
+            }
+        },
+        mounted() {
+            this.updateBannerHeight();
+            window.addEventListener('resize', this.updateBannerHeight);
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+            window.removeEventListener('resize', this.updateBannerHeight);
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

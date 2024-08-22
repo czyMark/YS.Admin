@@ -1,0 +1,71 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_Layout.cshtml";
+    OperatorInfo operatorInfo = ViewBag.OperatorInfo;
+    String portrait = operatorInfo.Portrait;
+    if (portrait == null || string.IsNullOrEmpty(portrait))
+    {
+        portrait = Url.Content("~/images/portrait.png");
+    }
+    else
+    {
+        portrait = GlobalContext.SystemConfig.ApiSite + portrait;
+    }
+}
+<style>
+    .rounded-circle {
+        width: 64px; /* 设置图片宽度为32px */
+        height: 64px; /* 设置图片高度为32px */
+        border-radius: 50%; /* 使图片变为圆形 */
+    }
+
+    .title {
+        display: flex;
+        justify-content: center;
+    }
+
+    .admin-header-lock {
+        margin: 30px;
+    }
+    /* 添加自定义类来只对按钮的左边圆角进行修改 */
+    .btn-custom-left {
+        border-top-left-radius: 0px; /* 左上角变为方角 */
+        border-bottom-left-radius: 0px; /* 左下角变为方角 */
+    }
+</style>
+<div class="admin-header-lock" id="lock-box">
+    <div class="title"><img src="@portrait" class="rounded-circle" /></div>
+    <div class="title">@operatorInfo.RealName</div>
+    <div class="title">
+        <input type="password" autocomplete="off" class="form-control btn-custom-left" placeholder="请输入密码解锁.." name="lockPwd" id="lockPwd" required>
+        <button id="unlock" class="btn btn-primary" onclick="unlocForm()">
+            解锁
+        </button>
+    </div>
+    <div class="title" style="margin-top:10px;">
+        <p style="color:red">请输入正确的锁屏密码，否则不会解锁成功哦！！！</p>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    function unlocForm() { 
+        var postData = { lockpwd: $("#lockPwd").val() };
+        ys.ajax({ 
+            url: '@Url.Content("~/OrganizationManage/User/UnLockJson")',
+            type: "Post",
+            data: postData,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    parent.layer.closeAll();
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        }); 
+    }
+    function saveForm(index) {
+        parent.layer.close(index);
+    }
+</script>

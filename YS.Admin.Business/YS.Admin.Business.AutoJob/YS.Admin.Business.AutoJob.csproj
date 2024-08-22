@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Quartz" Version="3.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\YS.Admin.Entity\YS.Admin.Entity\YS.Admin.Entity.csproj" />
+    <ProjectReference Include="..\..\YS.Admin.Util\YS.Admin.Util\YS.Admin.Util.csproj" />
+    <ProjectReference Include="..\YS.Admin.Business\YS.Admin.Business.csproj" />
+    <ProjectReference Include="..\YS.Admin.Service\YS.Admin.Service.csproj" />
+  </ItemGroup>
+
+</Project>

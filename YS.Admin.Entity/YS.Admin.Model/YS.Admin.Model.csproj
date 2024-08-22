@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Param\ToolManage\**" />
+    <Compile Remove="Result\CourseManage\**" />
+    <Compile Remove="Result\ExamManage\**" />
+    <EmbeddedResource Remove="Param\ToolManage\**" />
+    <EmbeddedResource Remove="Result\CourseManage\**" />
+    <EmbeddedResource Remove="Result\ExamManage\**" />
+    <None Remove="Param\ToolManage\**" />
+    <None Remove="Result\CourseManage\**" />
+    <None Remove="Result\ExamManage\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\YS.Admin.Util\YS.Admin.Util\YS.Admin.Util.csproj" />
+    <ProjectReference Include="..\YS.Admin.Entity\YS.Admin.Entity.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Param\ShortLInk\" />
+  </ItemGroup>
+
+</Project>

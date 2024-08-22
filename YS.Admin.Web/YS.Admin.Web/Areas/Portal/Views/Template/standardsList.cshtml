@@ -1,0 +1,106 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/charge.css")" />
+}
+
+<div id="app3" class="wrap">
+    <div class="element-wrap">
+        <div class="con-main-wrap">
+            <div class="title">@ViewBag.Title </div>
+            <div class="label">@ViewBag.Explanatory </div>
+            @if (ViewBag.tableList != null)
+            {
+                <div class="table-wrap" v-if="data.tableList.length !== 0">
+                    <div class="titles flex-row">
+                        <p style="margin-left: 15%;">{{data.tableList[0].C1}}</p>
+                        <p style="margin-left: 27%;">{{data.tableList[0].C2}}</p>
+                    </div>
+                    <div class="table-value-list">
+                        <div v-for="(item,index) in data.tableList" :key="index">
+                            <div class="table-value-item flex-row"
+                                 :class="index%2!=0?'active':'' " v-if="index !== 0">
+                                <div class="left">
+                                    <text class="textleft top" space="false" decode="false" selectable="false">
+                                        {{item.C1}}
+                                    </text>
+                                </div>
+                                <div class="right">
+                                    <p class="right" style="text-align: center;"> {{item.C2}} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (ViewBag.ShowDetails != null && ViewBag.ShowDetails)
+            {
+                @* <div class="price-details">
+            <div class="labels"> @ViewBag.feiyong </div>
+            <div class="label-title"> @ViewBag.shuoming </div>
+            <div class="labels"> @ViewBag.beizhu </div>
+            </div> *@
+
+                <div class="price-details">
+                    @Html.Raw(@ViewBag.details)
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    const App3 = {
+        data() {
+            return {
+                query: {
+                    total: 1000,
+                    page: 1,
+                    size: 10
+                },
+                data: {
+                    tableList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.tableList))
+                 }
+            }
+
+        },
+        methods: {
+
+        },
+        mounted() {
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

@@ -1,0 +1,63 @@
+.banner {
+    width: 100%;
+    height: 580px;
+}
+.element-wrap {
+    background-color: #f8fafa;
+}
+.element-wrap .title {
+    font-family: Source Han Sans CN;
+    font-size: 36px;
+    color: #447f64;
+    padding: 50px 0 36px;
+}
+.element-wrap .label {
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #4b4d4c;
+    line-height: 40px;
+    margin-bottom: 73px;
+}
+.list .item .con-main-wrap {
+    gap: 182px;
+    min-height: 401px;
+    cursor: pointer;
+}
+.list .item .con-main-wrap .left {
+    width: 0;
+    flex: 1;
+}
+.list .item .con-main-wrap .left .titles {
+    background: url('/images/pingji/icon1.png');
+    background-size: 100% 100%;
+    width: 150px;
+    height: 51px;
+    border-radius: 10px 10px 0px 10px;
+    font-family: Source Han Sans CN;
+    font-size: 30px;
+    color: #ffffff;
+}
+.list .item .con-main-wrap .left .title-info {
+    font-family: Source Han Sans CN;
+    font-size: 30px;
+    color: #447f64;
+    margin: 40px 0 29px;
+}
+.list .item .con-main-wrap .left .label {
+    width: 660px;
+    font-family: Source Han Sans CN;
+    font-size: 20px;
+    color: #4b4d4c;
+    line-height: 40px;
+}
+.list .item .con-main-wrap .right {
+    width: 415px;
+    height: 289px;
+    border-radius: 10px;
+}
+.active {
+    background-color: #f0f4f5;
+}
+.item .con-main-wrap:hover .left .label {
+    color: #447f64;
+}

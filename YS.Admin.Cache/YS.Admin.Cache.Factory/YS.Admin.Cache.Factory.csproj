@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\YS.Admin.Util\YS.Admin.Util\YS.Admin.Util.csproj" />
+    <ProjectReference Include="..\YS.Admin.Cache.Interface\YS.Admin.Cache.Interface.csproj" />
+    <ProjectReference Include="..\YS.Admin.MemoryCache\YS.Admin.MemoryCache.csproj" />
+    <ProjectReference Include="..\YS.Admin.RedisCache\YS.Admin.RedisCache.csproj" />
+  </ItemGroup>
+
+</Project>

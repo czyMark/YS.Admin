@@ -1,0 +1,95 @@
+﻿@using YS.Admin.Entity.SiteManage
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/originalText.css")" />
+}
+
+<div id="app3" class="wrap">
+    <div class="con-main-wrap">
+        @{
+            var Articles = ViewBag.tableList as List<ArticlesEntity>;
+            if (Articles != null && Articles.Count > 1)
+            {
+                <div class="title"> @Articles[0].Title </div>
+                <div class="label"> @Articles[0].Explanatory </div>
+                <div class="title xinde"> @Articles[1].Title </div>
+                <div class="title-info">@Articles[1].Explanatory </div>
+                @foreach (var item in @Articles[1].ArticlesDescriptiondata)
+                {
+                    <div class="item-one">@item.C1.ToString() </div>
+                }
+
+                <div class="xindes">
+                    <div class="address flex-row">
+                        <div class="left-img">
+                            <img class="xind" src="/images/pingji/icon2.png" alt="" />
+                        </div>
+                        @Articles[1].Express
+                    </div>
+                    <div class="address flex-row">
+                        <div class="left-img">
+                            <img class="xindee" src="/images/pingji/icon.png" alt="" />
+                        </div>
+                        @Articles[1].Courier
+                    </div>
+                </div>
+                <div class="details"> @Html.Raw(Articles[1].Contents) </div>
+
+            }
+            else
+            {
+                <div>No found.</div>
+            }
+        }
+    </div>
+
+</div>
+
+<script>
+
+
+
+    const App3 = {
+        data() {
+            return {
+            }
+
+        },
+        methods: {
+        },
+        mounted() {
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

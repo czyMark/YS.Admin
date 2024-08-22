@@ -1,0 +1,23 @@
+.banner {
+    width: 100%;
+    height: 580px;
+}
+
+.styles {
+    width: 10% !important;
+}
+
+.wrap {
+    padding-bottom: 100px;
+    background-color: #f8fafa;
+}
+
+.goods {
+    margin: 50px auto 78px;
+    text-align: center;
+}
+
+.goods-img {
+    max-width: 1002px;
+    max-height: 2242px;
+}

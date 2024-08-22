@@ -1,0 +1,131 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/Announcement.css")" />
+}
+
+<div id="app3" class="wrap">
+    <div class="list-wrap">
+        <div class="list con-main-wrap" v-if="data.tableList&&data.tableList.length>0">
+            <a :href="greeting(item.Id,item.CategoryId)" class="item" v-for="(item,index) in data.tableList">
+                <div class="left">
+                    <div class="day">{{formatTime(item.BaseModifyTime)}}</div>
+                    <div class="year"> {{formatDate(item.BaseModifyTime)}} </div>
+                </div>
+                <div class="cen-wrap">
+                    <div class="title ellipsis"> {{item.Title}} </div>
+                    <div class="label ellipsis3"> {{item.ZhaiYao}} </div>
+                </div>
+                <div class="right-wrap flex-col">
+                    <div class="nav">
+                        <img class="hover" src="/images/global/right-fff.png" alt="" />
+                        <img class="detault" src="/images/global/right-666.png" alt="" />
+                    </div>
+                    <div class="label" >查看更多</div>
+                </div>
+            </a>
+        </div>
+        <div class="pagination">
+            <el-pagination layout="prev, pager, next" 
+                           :page-size="query.size"
+                           :total="query.total"
+                           :current-page="query.currentPage"
+                           v-on:current-change="handlePageChange" />
+        </div>
+    </div>
+
+</div>
+
+<script> 
+    const App3 = {
+        data() {
+            return {
+                query: {
+                    size: 10,
+                    total: @ViewBag.total,
+                    currentPage:1
+                },
+                data: {
+                    tableList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.tableList))
+                 }
+            } 
+        },
+        methods: {
+            greeting(id, categoryId) {
+                return `./AnnouncementDetails?id=${id}&pid=${categoryId}`;
+            },
+            formatTime(time) {
+                let modifyDate = new Date(time);
+                let hours = modifyDate.getHours();
+                let minutes = modifyDate.getMinutes();
+                let seconds = modifyDate.getSeconds();
+                return `${hours}:${minutes}:${seconds}`;
+            },
+            formatDate(time) {
+                let modifyDate = new Date(time);
+                let year = modifyDate.getFullYear();
+                let month = modifyDate.getMonth() + 1;
+                let day = modifyDate.getDate();
+                return `${year}-${month}-${day}`;
+            },
+             fetchData(page) {  
+                  var queryUrl = '@Url.Content("~/Portal/ViewInfo/GetArticlesPageListJson")?CategoryId=@(ViewBag.CategoryId)'
+            + '&PageIndex=' + this.query.currentPage
+            + '&PageSize=' + this.query.size;
+            $.ajax({
+        url: queryUrl,
+        method: 'GET',
+        success: (obj) => { 
+            if (obj.Tag == 1) { 
+          this.data.tableList = obj.Data;
+          this.query.total = obj.Total;
+        }else
+        {
+          console.error(obj.Message);
+        }
+        },
+        error: (jqXHR, textStatus, errorThrown) => {
+          console.error('Error fetching data:', textStatus, errorThrown);
+        }
+      });    
+             },
+        handlePageChange(newPage) {
+            this.query.currentPage = newPage;
+            this.fetchData(newPage);
+        }
+        },
+        mounted() {
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

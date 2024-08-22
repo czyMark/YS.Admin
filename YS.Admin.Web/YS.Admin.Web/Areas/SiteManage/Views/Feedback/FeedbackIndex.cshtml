@@ -1,0 +1,225 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_Index.cshtml";
+}
+<div class="container-div">
+    <div class="row">
+        <div id="searchDiv" class="col-sm-12 search-collapse">
+            <div class="select-list">
+                <ul>
+                    <li>
+                        关键字：<input id="key" col="Key" type="text" />
+                    </li>
+                    <li>
+                        留言分类：<span id="groupId" col="GroupId"></span>
+                    </li>
+                    <li>
+                        <a id="btnSearch" class="btn btn-primary btn-sm" onclick="searchGrid()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="btn-group-sm hidden-xs" id="toolbar">
+            @*  <a id="btnAdd" class="btn btn-success" onclick="showSaveForm(true)"><i class="fa fa-plus"></i> 新增</a>
+            <a id="btnEdit" class="btn btn-primary disabled" onclick="showSaveForm(false)"><i class="fa fa-edit"></i> 修改</a> *@
+            <a id="btnProcessingStatusEnumT" class="btn btn-success disabled" onclick="ProcessingStatusEnumForm(true)"><i class="fa fa-remove"></i> 标记已处理</a>
+            <a id="btnProcessingStatusEnumF" class="btn btn-success disabled" onclick="ProcessingStatusEnumForm(false)"><i class="fa fa-remove"></i> 标记未处理</a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="gridTable" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var GroupType = [
+        { Key: null, Value: '' },
+        { Key: '0', Value: '正常' },
+        { Key: '1', Value: '公司简介' },
+        { Key: '2', Value: '打印系统' }
+    ]
+
+    $(function () {
+        initGrid();
+    });
+
+    function initGrid() {
+        var queryUrl = '@Url.Content("~/SiteManage/Feedback/GetPageListJson")';
+        $('#gridTable').ysTable({
+            url: queryUrl,
+            columns: [
+                { checkbox: true, visible: true },
+                { field: 'Id', title: 'Id', visible: false },
+                { field: 'content', title: '内容', visible: false },
+                {
+                    field: 'groupId',
+                    title: '留言分类',
+                    formatter: function (value, item, index) {
+                        var typeName =
+                            $.grep(GroupType, function (item) {
+                                return item.Key == value;
+                            })[0].Value;
+                        return typeName;
+                    }
+                },
+                { field: 'title', title: '标题' },
+                { field: 'userName', title: '姓名' },
+                { field: 'userTel', title: '电话' },
+                { field: 'userEmail', title: '邮箱' },
+                { field: 'userQq', title: 'QQ' },
+                {
+                    field: 'isLock', title: '状态', width: '10%', align: "left",
+                    formatter: function (value, row, index) {
+                        if (row.isLock == "@ProcessingStatusEnum.Yes.ParseToInt()") {
+                            return '<span class="badge badge-primary">' + "@ProcessingStatusEnum.Yes.GetDescription()" + '</span>';
+                        } else {
+                            return '<span class="badge badge-warning">' + "@ProcessingStatusEnum.No.GetDescription()" + '</span>';
+                        }
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs " href="javascript:void(0)" onclick="showContent(\'' + row.title + '\',\'' + row.content + '\')"><i class="fa fa-file-text"></i>显示留言内容</a> ');
+                        return actions.join('');
+                    }
+                }
+            ],
+            queryParams: function (params) {
+                var pagination = $('#gridTable').ysTable('getPagination', params);
+                var queryString = $('#searchDiv').getWebControls(pagination);
+                return queryString;
+            }
+        });
+    }
+
+    function searchGrid() {
+        $('#gridTable').ysTable('search');
+
+        if ($('#btnProcessingStatusEnumT')) {
+            $('#btnProcessingStatusEnumT').addClass('disabled');
+        }
+        if ($('#btnProcessingStatusEnumF')) {
+            $('#btnProcessingStatusEnumF').addClass('disabled');
+        }
+    }
+    $("#gridTable").on("check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function () {
+        var ids = $("#gridTable").bootstrapTable("getSelections");
+        if ($('#btnProcessingStatusEnumT')) {
+            $('#btnProcessingStatusEnumT').toggleClass('disabled', !ids.length);
+        }
+        if ($('#btnProcessingStatusEnumF')) {
+            $('#btnProcessingStatusEnumF').toggleClass('disabled', !ids.length);
+        }
+    });
+
+    function showContent(title, content) {
+
+        ys.openDialog({
+            title: title,
+            content: '@Url.Content("~/SiteManage/Feedback/FeedbackContent")' + '?content=' + content,
+            width: '768px',
+            height: '550px',
+            btn: [],
+            callback: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.saveForm(index);
+            }
+        });
+    }
+
+
+    function ProcessingStatusEnumForm(processingStatus) {
+        var id = 0;
+        var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+        if (!ys.checkRowEdit(selectedRow)) {
+            return;
+        }
+        else {
+            id = selectedRow[0].Id;
+        } 
+        ys.ajax({
+            url: '@Url.Content("~/SiteManage/Feedback/FeedbackStatusChange")' + '?id=' + id + '&processingStatus=' + processingStatus,
+            type: 'get',
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    searchGrid();
+                    ys.msgSuccess(obj.Message);
+                } else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        });
+
+    }
+    function showSaveForm(bAdd) {
+        var id = 0;
+        if (!bAdd) {
+            var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+            if (!ys.checkRowEdit(selectedRow)) {
+                return;
+            }
+            else {
+                id = selectedRow[0].Id;
+            }
+        }
+        ys.openDialog({
+            title: id > 0 ? '编辑' : '添加',
+            content: '@Url.Content("~/SiteManage/Feedback/FeedbackForm")' + '?id=' + id,
+            width: '768px',
+            height: '550px',
+            callback: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.saveForm(index);
+            }
+        });
+    }
+
+
+
+    // function showSaveForm(bAdd) {
+    //     var id = 0;
+    //     if (!bAdd) {
+    //         var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+    //         if (!ys.checkRowEdit(selectedRow)) {
+    //             return;
+    //         }
+    //         else {
+    //             id = selectedRow[0].Id;
+    //         }
+    //     }
+    //     ys.openDialog({
+    //         title: id > 0 ? '编辑' : '添加',
+    //         content: '@Url.Content("~/SiteManage/Feedback/FeedbackForm")' + '?id=' + id,
+    //         width: '768px',
+    //         height: '550px',
+    //         callback: function (index, layero) {
+    //             var iframeWin = window[layero.find('iframe')[0]['name']];
+    //             iframeWin.saveForm(index);
+    //         }
+    //     });
+    // }
+
+    // function deleteForm() {
+    //     var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+    //     if (ys.checkRowDelete(selectedRow)) {
+    //         ys.confirm('确认要删除选中的' + selectedRow.length + '条数据吗？', function () {
+    //             var ids = ys.getIds(selectedRow);
+    //             ys.ajax({
+    //                 url: '@Url.Content("~/SiteManage/Feedback/DeleteFormJson")' + '?ids=' + ids,
+    //                 type: 'post',
+    //                 success: function (obj) {
+    //                     if (obj.Tag == 1) {
+    //                         ys.msgSuccess(obj.Message);
+    //                         searchGrid();
+    //                     }
+    //                     else {
+    //                         ys.msgError(obj.Message);
+    //                     }
+    //                 }
+    //             });
+    //         });
+    //     }
+    // }
+</script>

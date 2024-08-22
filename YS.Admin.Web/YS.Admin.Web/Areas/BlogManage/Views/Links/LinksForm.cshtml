@@ -1,0 +1,123 @@
+﻿@using YS.Admin.Enum
+@using YS.Admin.Util
+@using YS.Admin.Util.Extension
+@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section header {
+
+	@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/css/imgup.min.css"))
+	@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/js/imgup.min.js"))
+
+	@*     @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.config.js"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.all.js"))*@
+
+	@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.css"))
+	@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js"))
+
+}
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">网站名称</label>
+            <div class="col-sm-8">
+                <input id="name" col="Name" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">网址</label>
+            <div class="col-sm-8">
+                <input id="url" col="Url" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">图标</label>
+            <div class="col-sm-8">
+                <div id="imgUrl" class="img-box">
+                </div> 
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">描述</label>
+            <div class="col-sm-8">
+                <textarea id="describe" name="Describe" col="Describe" maxlength="500" class="form-control valid" rows="3"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    $(function () {
+        $("#imgUrl").imageUpload({ uploadImage: 'uploadThumbImage', limit: 1, context: ctx });
+        getForm();
+
+        $('#form').validate({
+            rules: {
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/BlogManage/Links/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $("#imgUrl").imageUpload("setImageUrl", obj.Data.Icon);
+                        $('#form').setWebControls(obj.Data); 
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id });
+            postData.Icon = $("#imgUrl").imageUpload("getImageUrl");
+            ys.ajax({
+                url: '@Url.Content("~/BlogManage/Links/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+    function uploadThumbImage(file, callback) {
+        var formdata = new FormData();
+        formdata.append("fileList", file[0]);
+        ys.ajaxUploadFile({
+            url: '/File/UploadFile?fileModule=@UploadFileType.News.ParseToInt()',
+            data: formdata,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    if (callback) {
+                        //callback('@GlobalContext.SystemConfig.ApiSite' + obj.Data);
+                        callback(obj.Data);
+                    }
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        })
+    }
+</script>
+

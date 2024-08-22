@@ -1,0 +1,82 @@
+.element-wrap {
+    padding: 83px 0 0 0;
+    background-color: #f8fafa;
+}
+.con-main-wrap {
+    align-items: flex-start;
+}
+.con-main-wrap .left {
+    width: 0;
+    flex: 1;
+}
+.con-main-wrap .left .title {
+    font-family: PingFang SC;
+    font-size: 30px;
+    color: #447f64;
+}
+.con-main-wrap .left .label {
+    justify-content: flex-start;
+    gap: 40px;
+    margin-top: 25px;
+    font-family: PingFang SC;
+    font-size: 14px;
+    color: #505050;
+    line-height: 22px;
+}
+.con-main-wrap .left .label span {
+    margin-right: 10px;
+    cursor: pointer;
+}
+.con-main-wrap .left .label span:hover {
+    color: #447f64;
+}
+.con-main-wrap .right {
+    width: 200px;
+    min-height: 562px;
+    padding-left: 23px;
+    border-left: 1px solid #e7eaea;
+}
+.con-main-wrap .right .item {
+    cursor: pointer;
+}
+.con-main-wrap .right .item:hover .label {
+    color: #447f64;
+}
+.con-main-wrap .right .title {
+    font-family: PingFang SC;
+    font-size: 16px;
+    color: #505050;
+    font-weight: 500;
+    line-height: 22px;
+}
+.con-main-wrap .right .label {
+    font-family: PingFang SC;
+    font-size: 14px;
+    color: #505050;
+    margin: 23px 0 21px;
+    line-height: 22px;
+}
+.con-main-wrap .right .details {
+    font-family: PingFang SC;
+    font-size: 16px;
+    color: #447f64;
+    line-height: 22px;
+    text-decoration-line: underline;
+    margin-bottom: 53px;
+}
+.btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 235px;
+    font-size: 16px;
+    gap: 16px;
+    height: 45px;
+    background: #447f64;
+    border-radius: 23px;
+    color: #fff;
+    cursor: pointer;
+}
+.html {
+    margin-top: 43px;
+}

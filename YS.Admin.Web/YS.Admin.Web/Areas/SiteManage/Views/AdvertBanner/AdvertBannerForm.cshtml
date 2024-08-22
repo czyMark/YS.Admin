@@ -1,0 +1,149 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section header{
+
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/css/imgup.min.css"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/js/imgup.min.js"))
+
+@*     @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.config.js"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/ueditor/ueditor.all.js"))*@
+
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.css"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js"))
+}
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+
+        <input id="aid" col="Aid" type="hidden" class="form-control" />
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">广告名称</label>
+            <div class="col-sm-8">
+                <input id="title" col="Title" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">移动端图片地址</label>
+            <div class="col-sm-8">
+                <div id="filePath" class="img-box">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">PC端图片地址</label>
+            <div class="col-sm-8">
+                <div id="pcFilePath" class="img-box">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">链接网址</label>
+            <div class="col-sm-8">
+                <input id="linkUrl" col="LinkUrl" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">备注</label>
+            <div class="col-sm-8">
+                    <textarea id="contents"  col="Contents" maxlength="500" class="form-control valid" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">排序数字</label>
+            <div class="col-sm-8">
+                <input id="sortId" col="SortId" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">状态</label>
+            <div class="col-sm-8" id="isLock" col="IsLock"></div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    var Aid = ys.request("Aid");
+    $(function () {
+
+        $("#isLock").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(ShowEmum).EnumToDictionaryString())) });
+         $("#filePath").imageUpload({ uploadImage: 'uploadThumbImage', limit: 1, context: ctx });
+        $("#pcFilePath").imageUpload({ uploadImage: 'uploadThumbImage', limit: 1, context: ctx });
+        getForm();
+        $("#aid").val(Aid);
+        $('#form').validate({
+            rules: {
+                title: { required: true },
+                sortId: { required: true,number: true, digits: true },
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/SiteManage/AdvertBanner/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                         $("#filePath").imageUpload("setImageUrl", obj.Data.FilePath);
+                        $("#pcFilePath").imageUpload("setImageUrl", obj.Data.PcFilePath);
+                        $('#form').setWebControls(obj.Data);
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {IsLock:1};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id });
+            postData.FilePath = $("#filePath").imageUpload("getImageUrl");
+            postData.PcFilePath = $("#pcFilePath").imageUpload("getImageUrl");
+            ys.ajax({
+                url: '@Url.Content("~/SiteManage/AdvertBanner/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+
+
+       function uploadThumbImage(file, callback) {
+        var formdata = new FormData();
+        formdata.append("fileList", file[0]);
+        ys.ajaxUploadFile({
+            url:  '/File/UploadFile?fileModule=@UploadFileType.News.ParseToInt()',
+            //url: '@Url.Content("~/File/UploadFile?fileModule=")'+@UploadFileType.News.ParseToInt(),
+            data: formdata,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    if (callback) {
+                        //callback('@GlobalContext.SystemConfig.ApiSite' + obj.Data);
+                        callback(obj.Data);
+                    }
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        })
+    }
+</script>
+

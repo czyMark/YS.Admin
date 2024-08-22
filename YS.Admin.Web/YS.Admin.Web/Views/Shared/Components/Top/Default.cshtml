@@ -1,0 +1,58 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<WebTreeList>
+
+        <header class="header-box">
+            <div class="center">
+                <div class="header-top clearfix">
+                    <div class="weather f-fl">北京&nbsp;&nbsp;&nbsp;&nbsp;晴&nbsp;&nbsp;&nbsp;&nbsp;3/19°C</div>
+                    <div class="header-top-right f-fr">
+                        <div class="box1 f-fl">
+                            <a href="http://mail.beijing.gov.cn/">公务员邮箱</a>
+                        </div>
+                        <div class="box2 f-fl">
+                            <a href="#">设为首页 @ViewBag.Cid</a>
+                            <a href="#">加入收藏</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-main clearfix">
+                    <div class="left">
+                        <a class="logo" href="#"><img src="@ViewBag.SiteConfig.WebLogo " alt=""></a>
+                        <!-- <p class="p1">@ViewBag.SiteConfig.WebCompany 主办</p> -->
+                        <img class="img1" src="/images/zi.png" alt="">
+                    </div>
+                    <div class="main">
+                        <div class="search-box">
+                            <input class="input1" type="text" placeholder="搜索你想要的新闻资讯">
+                            <button class="btn1" type="button">搜索</button>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <a class="item" href="#">
+                            <img src="/images/sdzc-img.png" alt="">
+                            <p>首都之窗</p>
+                        </a>
+                        <a class="item" href="#">
+                            <img src="/images/xfgz-img.png" alt="">
+                            <p>信访工作</p>
+                        </a>
+                        <a class="item" href="#">
+                            <img src="/images/jjjc-img.png" alt="">
+                            <p>纪检监察</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="nav-box">
+            <nav class="nav center">
+                <a class="link" href="/">首 页</a>
+                 @foreach (var item in Model)
+    {
+        <a class="link" href="/@item.ModelUrl/C/@item.Cid">@item.Title</a>
+    }
+            </nav>
+        </div>

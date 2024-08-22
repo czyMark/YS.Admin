@@ -1,0 +1,63 @@
+﻿<nav class="paging">
+    @ViewBag.CurrentPageIndex
+    @ViewBag.TotalPageCount
+    @{
+        const int pageIncrement = 2;
+        const int pageTrailing = 5;
+        var totalPageCount = ViewBag.TotalPageCount == null ? 1 : (int)ViewBag.TotalPageCount;
+        if (totalPageCount > 1)
+        {
+            var pageIndex = ViewBag.CurrentPageIndex == null ? 1 : (int)ViewBag.CurrentPageIndex;
+            var pageRangeStart = pageIndex <= pageIncrement ? 1 : pageIndex - pageIncrement;
+            var pageRangeEnd = pageIndex + pageIncrement <= totalPageCount ? (totalPageCount > pageTrailing && pageIndex + pageIncrement < pageTrailing ? pageTrailing : pageIndex + pageIncrement) : totalPageCount;
+            @if (pageIndex - 1 > 0)
+            {
+                <a href="/@ViewBag.pageUrl/C/@ViewBag.UrlParam.Cid/P/@(pageIndex - 1)" class="pageprv">上一页</a>
+            }
+            else
+            {
+                <a href="javascript:;" class="pageprv z-dis">上一页</a>
+            }
+            @*if (pageRangeStart > 1)
+                {
+                    <a href="?Cid=&page=">1</a>
+                    if (pageRangeStart > 2)
+                    {
+                        <li class="page-item disabled">
+                            <input name="id" type="submit" class="page-link" style="cursor: pointer;" value="..." />
+                        </li>
+                    }
+                }*@
+            for (var i = 1; i <= pageRangeEnd; i++)
+            {
+
+                    <a href="/@ViewBag.pageUrl/C/@ViewBag.UrlParam.Cid/P/@i" class="@(pageIndex == i ? "z-crt" : "")">@i</a>
+              
+            }
+            if (pageRangeEnd < totalPageCount)
+            {
+               
+                <a href="/@ViewBag.pageUrl/C/@ViewBag.UrlParam.Cid/P/@totalPageCount">@totalPageCount</a>
+            }
+            @if (pageIndex < totalPageCount)
+            {
+                <a href="/@ViewBag.pageUrl/C/@ViewBag.UrlParam.Cid/P/@(pageIndex + 1)" class="pagenxt">下一页</a>
+            }
+            else
+            {
+                <a href="javascript:;" class="pagenxt z-dis">下一页</a>
+            }
+        }
+    }
+</nav>
+
+
+@*<nav class="paging">
+        <a href="javascript:;" class="pageprv z-dis">上一页</a>
+        <a href="#">1</a>
+        <a href="javascript:;" >2</a>
+        <a href="#">3</a>
+        <i>...</i>
+        <a href="#">10</a>
+        <a href="#" class="pagenxt">下一页</a>
+    </nav>*@

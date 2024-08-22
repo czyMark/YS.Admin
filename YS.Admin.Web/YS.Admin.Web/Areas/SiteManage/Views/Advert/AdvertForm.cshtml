@@ -1,0 +1,101 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_FormWhite.cshtml";
+}
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">广告位名称<font class="red"> *</font></label>
+            <div class="col-sm-8">
+                <input id="title" col="Title" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">备注说明</label>
+            <div class="col-sm-8">
+                  <textarea id="remark" name="Remark" col="Remark"  maxlength="500" class="form-control valid" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">显示数量</label>
+            <div class="col-sm-8">
+                <input id="viewNum" col="ViewNum" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">宽度（px）</label>
+            <div class="col-sm-8">
+                <input id="viewWidth" col="ViewWidth" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">高度（px）</label>
+            <div class="col-sm-8">
+                <input id="viewHeight" col="ViewHeight" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">链接目标</label>
+                 <div class="col-sm-4" id="target" col="Target"></div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    $(function () {
+         laydate.render({ elem: '#addTime', type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss' });
+         $("#target").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(TargetEnum).EnumToDictionaryString())) });
+        getForm();
+
+        $('#form').validate({
+            rules: {
+                title: { required: true },
+                viewNum:{number:true,digits:true},
+                viewWidth:{number:true,digits:true},
+                viewHeight:{number:true,digits:true}
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/SiteManage/Advert/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $('#form').setWebControls(obj.Data);
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            defaultData.Target=1;
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id });
+            ys.ajax({
+                url: '@Url.Content("~/SiteManage/Advert/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+</script>
+

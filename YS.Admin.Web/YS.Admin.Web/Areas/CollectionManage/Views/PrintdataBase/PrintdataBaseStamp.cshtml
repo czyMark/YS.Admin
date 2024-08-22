@@ -1,0 +1,502 @@
+﻿@using YS.Admin.Util
+@{
+    Layout = "~/Areas/System/Views/Shared/_Index.cshtml";
+}
+@* 引入Handsontable *@
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section header {
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/Handsontable/dist/handsontable.full.min.css"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/Handsontable/dist/handsontable.full.min.js"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/Handsontable/dist/languages/zh-CN.js"))
+}
+<style>
+    .readonly-row {
+        background-color: #000;
+    }
+
+    .header-checkbox {
+        cursor: pointer;
+    }
+</style>
+
+<div class="container-div">
+    <div id="searchDiv" class="col-sm-12 search-collapse">
+        <div class="select-list">
+            <ul>
+                <li>
+                    客户姓名：<input id="CustomerName" col="CustomerName" type="text" style="width:240px" />
+                </li>
+                <li>
+                    鉴定编号：<input id="IDCode" col="IDCode" type="text" style="width:240px" />
+                </li>
+                <li>
+                    藏品名称：<input id="CollectionName" col="CollectionName" type="text" style="width:240px" />
+                </li>
+                <li>
+                    年份：<input id="CollectionYear" col="CollectionYear" type="text" style="width:240px" />
+                </li>
+                <li>
+                    面值：<input id="CollectionValue" col="CollectionValue" type="text" style="width:240px" />
+                </li>
+                <li>
+                    标签类型：<span id="tagTypeName" col="TagTypeName"></span>
+                </li>
+                <li>
+                    数据表：<span id="printDataId" col="PrintDataId"></span>
+                </li>
+                <li>
+                    <a id="btnFilter" class="btn btn-primary btn-sm" onclick="filterNowData()"><i class="fa fa-search"></i>&nbsp;查询</a>
+                </li>
+                <li>
+                    <a id="btnUnlockEdit" class="btn btn-primary btn-sm" onclick="unlockEdit()"><i class="fa fa-lock"></i>&nbsp;解锁并编辑</a>
+                </li>
+                <li>
+                    <a id="btnUnlockPrint" class="btn btn-primary btn-sm" onclick="unlockPrint()"><i class="fa fa-print"></i>&nbsp;解锁并打印</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-24   table-striped">
+        <div id="DataTableExcelEdit" style="width: 100%;background-color:white"></div>
+        <div class="fixed-table-pagination" id="pagination-info-Panel" style="background-color:white">
+            <div class="pull-left pagination-detail">
+                <span class="pagination-info">
+                    显示第
+                    <span id="start-count">0</span>
+                    到第
+                    <span id="end-count">0</span>
+                    条记录，总共
+                    <span id="total-count">0</span>
+                    条记录
+                </span>
+                <span class="page-list">
+                    每页显示
+                    <input id="pageSize" col="PageSize" type="text" style="width:50px" value="15" onblur="pageSizeChange()" />
+                    条记录
+                </span>
+            </div>
+            <div class="pull-right pagination" id="pagination-container">
+                <ul class="pagination" id="pagination">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        filterNowData();
+         
+
+        //查询数据标签
+        $("#tagTypeName").ysComboBox({
+            url: '@Url.Content("~/CollectionManage/Tagtype/GetListJson")',
+            dataName: "Data",
+            key: "TagTypeName",
+            value: "TagTypeName"
+        });
+
+        //查询所有数据库 标记数据的表
+        $("#printDataId").ysComboBox({
+            url: '@Url.Content("~/CollectionManage/Pringdatamaintag/GetListJson")',
+            dataName: "Data",
+            key: "Id",
+            value: "MainTagName"
+        });
+
+
+    });
+    var pageData, filterPage, currentPageData = [{ DataState: 99, TagTypeName: "" }];
+    var totalPages = 1; // 总页数
+    var currentPage = 1; // 当前页码
+    var pageSize = 15; // 页大小
+    var startCount = 0;//本页开始条目
+    var totalCount = 0;//总共数据量
+    var endCount = 0;//本页结束条目
+
+    function pageSizeChange() {
+         if (isNaN($("#pageSize").val())) {
+            ys.msgError("请输入数字");
+            return;
+        }
+
+        pageSize = $("#pageSize").val();
+        //渲染分页
+        currentPage = 1;
+        totalPages = Math.ceil(totalCount / pageSize); // 总页数
+        filterNowData();
+
+    }
+
+    var container = document.getElementById('DataTableExcelEdit');
+    var hot = new Handsontable(container, {
+        colHeaders: true,
+        columns: @Html.Raw(ViewBag.DataTableColumns),
+        height: 380,
+        data: [],
+        manualColumnMove: true,
+        manualColumnResize: true, // 启用手动调整列宽
+        contextMenu: true,
+        width: '100%',
+        stretchH: 'all',
+        afterGetColHeader: function (col, TH) {
+            if (col === 0) { // 为第一列（复选框列）添加全选复选框
+                var checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = 'select-all';
+                checkbox.className = 'header-checkbox';
+
+
+                checkbox.addEventListener('click', function () {
+                    if (checkbox.checked == true) {
+                        var data = currentPageData;
+                        for (var row = 0; row < data.length; row++) {
+                            data[row][0] = true;
+                        }
+                        hot.loadData(data);
+
+                        checkbox.checked = true;
+
+                    }
+                    else {
+
+                        var data = currentPageData;
+                        for (var row = 0; row < data.length; row++) {
+                            data[row][0] = false;
+                        }
+                        hot.loadData(data);
+
+                        checkbox.checked = false;
+                    }
+
+                    TH.innerHTML = ''; // 清空列头内容
+                    TH.appendChild(checkbox);
+                });
+                TH.innerHTML = ''; // 清空列头内容
+                TH.appendChild(checkbox);
+            }
+        },
+        afterChange: function (changes, source) {
+
+        },
+        cells: function (row, col) {
+            var cellProperties = {};
+
+            if (col === 0) {
+                cellProperties.width = 30;
+            } else if (col === 1) {
+                cellProperties.width = 30; // ID 列
+            } else if (col === 2) {
+                cellProperties.width = 30; // ID 列
+            }
+
+            if (col > 0) {
+                // 0-锁定 2-打印 不能编辑
+                if (currentPageData.length >= 1) {
+                    if (currentPageData[row].DataState == 0 || currentPageData[row].DataState == 2) {
+                        cellProperties.readOnly = true;
+                        cellProperties.renderer = function (instance, td, row, col, prop, value) {
+                            Handsontable.renderers.TextRenderer.apply(this, arguments);
+                            td.style.backgroundColor = '#f2f2f2'; // 只读变化背景
+                        };
+                    } else {
+                        cellProperties.readOnly = false;
+                        cellProperties.renderer = function (instance, td, row, col, prop, value) {
+                            Handsontable.renderers.TextRenderer.apply(this, arguments);
+                            td.style.backgroundColor = '#ffffff';
+                        };
+                    }
+                }
+            }
+            return cellProperties;
+        }
+    });
+    // 获取选中数据的函数
+    function getCheckedData() {
+        var data = currentPageData;
+        var checkedData = data.filter(function (row) {
+            return row[0] === true; // 获取复选框选中的行
+        });
+        return checkedData;
+    }
+
+    function renderHeight() {
+
+        if (pageSize < totalCount) {
+            hot.updateSettings({
+                height: pageSize * 23 + 42
+            });
+        } else {
+            if (totalCount < 15) {
+                hot.updateSettings({
+                    height: 15 * 23.333 + 28
+                });
+            } else {
+                hot.updateSettings({
+                    height: totalCount * 23.333 + 42
+                });
+            }
+
+        }
+
+    }
+    function renderPagination() {
+        if (totalPages <= 1) {
+            document.getElementById('pagination-container').style.display = 'none';
+            return;
+        }
+        document.getElementById('pagination-container').style.display = 'block';
+
+        var paginationHTML = '<li class="page-item ' + (currentPage === 1 ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage - 1) + '">‹</a></li>';
+
+        var startPage = Math.max(1, currentPage - 3);
+        var endPage = Math.min(totalPages, currentPage + 3);
+
+        if (startPage > 1) {
+            paginationHTML += '<li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>';
+            if (startPage > 2) {
+                paginationHTML += '<li class="page-item page-last-separator disabled"><a class="page-link" href="#">...</a></li>';
+            }
+        }
+
+        for (var i = startPage; i <= endPage; i++) {
+            if (i === currentPage) {
+                paginationHTML += '<li class="page-item active"><a class="page-link" href="#">' + i + '</a></li>';
+            } else {
+                paginationHTML += '<li class="page-item"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+            }
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                paginationHTML += '<li class="page-item page-last-separator disabled"><a class="page-link" href="#">...</a></li>';
+            }
+            paginationHTML += '<li class="page-item"><a class="page-link" href="#" data-page="' + totalPages + '">' + totalPages + '</a></li>';
+        }
+
+        paginationHTML += '<li class="page-item ' + (currentPage === totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">›</a></li>';
+
+        document.getElementById('pagination').innerHTML = paginationHTML;
+
+        // 绑定点击事件
+        var paginationItems = document.querySelectorAll('.page-item .page-link');
+        paginationItems.forEach(function (item) {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+                var page = parseInt(this.getAttribute('data-page'));
+                if (!isNaN(page) && page != currentPage) {
+                    currentPage = page;
+                    resetData();
+                }
+            });
+        });
+    }
+
+    function renderPageInfo() {
+        if (totalPages == 0) {
+            currentPage = 0;
+            startCount = 0;
+            totalPages = 0;
+            endCount = 0;
+            $("#start-count").text(startCount);
+            $("#end-count").text(endCount);
+            $("#total-count").text(totalCount);
+
+            //没有数据隐藏面板
+            $("#pagination-info-Panel").hide();
+
+            return;
+        } else {
+
+            //有数据显示面板
+            $("#pagination-info-Panel").show();
+        }
+
+        //渲染分页
+        startCount = (currentPage - 1) * pageSize + 1;
+        endCount = currentPage * pageSize;
+        $("#start-count").text(startCount);
+
+        //结束的超过最大的 变成最大的
+        if (endCount > filterPage.length) {
+            endCount = filterPage.length;
+        }
+        $("#end-count").text(endCount);
+
+
+    }
+
+    function initExcel() {
+
+    }
+    function resetData() {
+
+        var search = $('#searchDiv').getWebControls();
+
+
+        //查询所有数据库 标记数据的表
+        //查询过滤数据 带分页信息
+        /// 每页行数
+        // public int PageSize { get; set; }
+        /// 当前页
+        //public int PageIndex { get; set; }
+        var queryUrl = '@Url.Content("~/CollectionManage/PrintdataBase/GetDatabaseTypeDataListJson")?DataTag=@(ViewBag.DataTag)&TagTypeName=' + search.TagTypeName + '&CustomerName=' + search.CustomerName + '&MainTagName=' + search.PrintDataId
+            + '&PageIndex=' + currentPage
+            + '&PageSize=' + pageSize + '&IDCode=' + search.IDCode + '&CollectionYear=' + search.CollectionYear + '&CollectionValue=' + search.CollectionValue + '&CollectionName=' + search.CollectionName;
+
+
+        ys.ajax({
+            url: queryUrl,
+            type: 'get',
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    //重新绑定数据
+                    pageData = obj.Data;
+                    filterPage = pageData;
+                    currentPageData = filterPage;
+                    renderPageInfo();
+                    renderPagination(); // 初始化分页控件
+                    // 加载新数据
+                    hot.loadData(currentPageData);
+                    // 重新渲染表格
+                    hot.render();
+
+
+                    renderHeight();
+                }
+            }
+        });
+
+    }
+    function filterNowData() {
+        var search = $('#searchDiv').getWebControls();
+
+        //查询所有数据库 标记数据的表
+
+        var queryCountUrl = '@Url.Content("~/CollectionManage/PrintdataBase/GetDatabaseTypeDataListCountJson")?DataTag=@(ViewBag.DataTag)&TagTypeName=' + search.TagTypeName + '&CustomerName=' + search.CustomerName + '&MainTagName=' + search.PrintDataId
+            + '&PageIndex=' + currentPage
+            + '&PageSize=' + pageSize + '&IDCode=' + search.IDCode + '&CollectionYear=' + search.CollectionYear + '&CollectionValue=' + search.CollectionValue + '&CollectionName=' + search.CollectionName;
+        ys.ajax({
+            url: queryCountUrl,
+            type: 'get',
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    //计算总计
+                    totalCount = obj.Data[0].Index;
+                    totalPages = Math.ceil(totalCount / pageSize); // 总页数
+                    $("#total-count").text(totalCount);
+                    currentPage = 1; // 当前页码
+                    resetData();
+                }
+            }
+        });
+
+    }
+
+
+
+    //解锁并编辑
+    function unlockEdit() {
+        //校验所有的数据是否都是同一个类型标签数据
+        var verfiy = 0;
+        var oldTagTypeName = "";
+        var printData = getCheckedData();
+        if (printData.length == 0) {
+            ys.msgError("请选中要解锁的数据");
+            return;
+        }
+
+
+        //替换html中的变成SaveData中的数据
+        //post提交数据保存  将数据的状态变成 编辑状态
+        ys.confirm('确认要解锁并编辑选中的数据吗？', function () {
+            //将数据解锁
+            ys.ajax({
+                url: '@Url.Content("~/CollectionManage/PrintdataBase/UnLockSaveFormJson")',
+                data: { SaveDataString: JSON.stringify(printData) },
+                type: 'post',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        //打开新的编辑界面
+                        // obj.Message 存储临时表的ID
+                        ys.openDialog({
+                            title: '编辑数据',
+                            content: '@Url.Content("~/CollectionManage/PrintdataBase/PrintdataBaseFrom")' + '?id=' + obj.Message + "&DataTag=@(ViewBag.DataTag)",
+                            width: '90%',
+                            height: '90%',
+                            callback: function (index, layero) {
+                                // var htmlstr = html.replace("{LockEditSaveData}", JSON.stringify(printData));
+                                var iframeWin = window[layero.find('iframe')[0]['name']];
+                                iframeWin.saveForm(index);
+                                filterNowData();
+                            }
+                        });
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        });
+
+    }
+    //解锁并打印
+    function unlockPrint() {
+        //校验所有的数据是否都是同一个类型标签数据
+        var verfiy = 0;
+        var oldTagTypeName = "";
+        var printData = getCheckedData();
+        if (printData.length == 0) {
+            ys.msgError("请选中要解锁的数据");
+            return;
+        }
+
+        for (let i = 0; i < printData.length; i++) {
+            var tName = printData[i].TagTypeName;
+            if (tName === null || tName === "") {
+                verfiy = 2;
+                break;
+            }
+            if (tName != oldTagTypeName) {
+                if (verfiy == 0) {
+                    oldTagTypeName = tName;
+                    verfiy = 1;
+                }
+                else {
+                    verfiy = 2;
+                    break;
+                }
+            }
+        }
+
+        if (verfiy == 2) {
+            ys.msgError("标签类型必须是一样的才能保存并打印");
+            return;
+        }
+
+
+        //post提交数据保存
+        //重新打印即可
+        ys.confirm('确认解锁并打印选中的数据吗？', function () {
+            //参数
+            ys.ajax({
+                url: '@Url.Content("~/CollectionManage/PrintdataBase/LockPrintFormJson")',
+                data: { SaveDataString: JSON.stringify(printData) },
+                type: 'post',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        //打开新的界面 跳出当前框架页
+                        //打开的地址为返回的obj.Message
+                        window.open(obj.Message, '_blank', 'noopener,noreferrer');
+                        //刷新数据
+                        filterNowData();
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        });
+    }
+</script>

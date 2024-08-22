@@ -1,0 +1,120 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+</style>
+<div>
+    <div class="admin-header-lock" id="lock-box">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a data-toggle="tab" href="#tab-1" aria-expanded="true">系统公告</a>
+            </li>
+            <li class="">
+                <a data-toggle="tab" href="#tab-2" aria-expanded="false">我的消息</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4" id="announcement">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-2" class="tab-pane">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4" id="message">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<script type="text/javascript">
+
+    var id = ys.request("id");
+
+    var tag = top.getDataDict("MassageTag");
+    $(function () {
+        //查看跟我相关的公告及消息。
+        ys.ajax({
+            url: '@Url.Content("~/SystemManage/Messages/GetMyMessagesJson")?id=' + id,
+            type: 'get',
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    var announcementStr = "";
+                    var messageStr = "";
+                    var readStatusStr = "";
+                    for (let i = 0; i < obj.Data.length; i++) {
+                        var str = "";
+                        if (obj.Data[i].MessagesTag === null || obj.Data[i].MessagesTag === undefined || obj.Data[i].MessagesTag.trim() === '') {
+
+
+                        }
+                        else {
+                            var MessagesTag = obj.Data[i].MessagesTag.split(',');
+                            MessagesTag.forEach(function (item1) {
+                                tag.forEach(function (item2) {
+                                    if (item1 == item2.DictKey) {
+                                        str += '<span class="label label-' + item2.ListClass + ' pull-right">' + item2.DictValue + '</span>';
+                                    }
+                                });
+                            });
+                        }
+
+                        if (obj.Data[i].ReadStatus == null || obj.Data[i].ReadStatus == 0)
+                            readStatusStr = '未读';
+
+                        if (obj.Data[i].ReadStatus == 1)
+                            readStatusStr = '已读';
+
+
+
+                        if (obj.Data[i].Type == 2) {
+
+                            announcementStr += '<div class="ibox" onclick = "ShowDetail(\'' + obj.Data[i].Id + '\')" ><div class="ibox-title" >' + str + '<h5>' + obj.Data[i].Title + '</h5></div><div class="ibox-content" ><p>' + obj.Data[i].Summary + '</p></div><div class="ibox-content" ><p id=\'r' + obj.Data[i].Id + '\'>' + readStatusStr + '</p></div> </div>';
+
+                        } else {
+
+                            messageStr += '<div class="ibox" onclick = "ShowDetail(\'' + obj.Data[i].Id + '\')" ><div class="ibox-title" >' + str + '<h5>' + obj.Data[i].Title + '</h5></div><div class="ibox-content" ><p>' + obj.Data[i].Summary + '</p></div><div class="ibox-content" ><p id=\'r' + obj.Data[i].Id + '\'>' + readStatusStr + '</p></div> </div>';
+                        }
+                    }
+                    $("#announcement").html(announcementStr);
+                    $("#message").html(messageStr);
+                } else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        });
+    });
+
+
+    function ShowDetail(id) {
+        ys.ajax({
+            url: '@Url.Content("~/SystemManage/Messages/GetFormJson")?id=' + id,
+            type: 'get',
+            success: function (obj) {
+                if (obj.Tag == 1) {
+
+                    //需要将 状态变成已读
+                    $("#r" + id + "").html("已读");
+
+                    parent.showshowAnnouncementDetail(obj.Data.Content);
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        });
+    }
+</script>

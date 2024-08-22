@@ -1,0 +1,230 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_FormGray.cshtml";
+}
+
+<div class="row wrapper wrapper-content animated fadeInRight">
+
+    <div class="col-sm-6">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>单选框的使用</h5>
+            </div>
+
+            <div class="ibox-content">
+                <p>
+                    界面上使用 <pre><code>
+&lt;div class="col-sm-8" id="menuStatus" col="MenuStatus"&gt;&lt;/div&gt;
+                        </code></pre>
+                </p>
+                <p>
+                    数据加载  <pre><code>
+                        $("#menuType").ysRadioBox({ data: ys.getJson(&#64;Html.Raw(typeof(MenuTypeEnum).EnumToDictionaryString())) });
+                        </code></pre>
+                </p>
+                <p>
+
+                    点击后的触发器 <pre><code>
+$('input[name=menuType_radiobox]').on('ifChecked', function (event) {
+    var menuType = $(event.target).val();
+    menuVisible(menuType);
+});
+                    </code></pre>
+                </p>
+                <p>
+                    触发调用的方法 <pre><code>
+
+
+    function menuVisible(menuType) {
+        if (menuType == "&#64;MenuTypeEnum.Directory.ParseToInt()") {
+            $("#menuUrl").parents(".form-group").hide();
+            $("#authorize").parents(".form-group").hide();
+            $("#menuIcon").parents(".form-group").show();
+        }
+    }
+                    </code></pre>
+                </p>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <div class="ibox-title">
+                    <h5>下拉框数据绑定</h5>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <p>
+                    界面上使用 <pre><code>&lt;span id=&quot;printDataId&quot; col=&quot;PrintDataId&quot;&gt;&lt;/span&gt;</code></pre>
+                </p>  <p>
+                    加载数据 <pre><code>
+    data: [
+            { Key: '藏品图片', Value: '藏品图片' },
+            { Key: '大数据标识', Value: '大数据标识' },
+            { Key: '印章图片', Value: '印章图片' },
+            { Key: '评级日期', Value: '评级日期' },
+            { Key: '大数据标识界面显示', Value: '大数据标识界面显示' },
+            { Key: '证书顶部图片', Value: '证书顶部图片' }
+    ],
+    key: "Key",
+    value: "Value",
+    class: "form-control"
+                    </code></pre>
+                </p>
+                <p>
+                    绑定数据 <pre><code>
+        $("#printDataId").ysComboBox({
+            url: '&#64;Url.Content("~/CollectionManage/Pringdatamaintag/GetListJson")',
+            key: "Id",
+            value: "MainTagName"
+        });</code></pre>
+                </p>
+                <p>
+                    </pre>
+                    数据设置及获取 <pre><code>
+        $('#printDataId').ysComboBox('setValue', outputModule); 
+        $('#printDataId').ysComboBox('getValue');</code></pre>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>打开新的页面</h5>
+            </div>
+
+            <div class="ibox-content">
+                <p>
+                    <button type="button" class="btn btn-w-m btn-default" onclick="showNewForm(true)">在框架页内打开</button>
+                    <button type="button" class="btn btn-w-m btn-primary" onclick="showNewForm(false)">在新窗口打开</button>
+                </p>
+                <h3 class="font-bold">
+                    在框架页内打开
+                </h3>
+                <p>
+                    可使用 <code>createMenuItem(url, "测试按钮");</code>
+                </p>
+
+                <h3 class="font-bold">
+                    在新窗口打开
+                </h3>
+                <p>
+                    可使用 <code>window.open(url, '_blank', 'noopener,noreferrer');</code>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>框架控件使用</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a href="#">选项1</a>
+                        </li>
+                        <li>
+                            <a href="#">选项2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <p>
+                    弹出框，封装了一层。<code>
+                        ys.openDialog();
+                    </code>简单的使用。如果有特殊的弹出框要求。
+                    可以直接查看
+                    https://layui.dev/docs/2/layer/index.html对应的参数设置
+                </p>
+            </div>
+            <div class="ibox-content">
+                <p>
+                    表格点击复选框选中后,触发的事件。可以修改样式。
+
+                    <pre>    <code>
+
+    $("#gridTable").on("check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function () {
+        var ids = $("#gridTable").bootstrapTable("getSelections");
+        if ($('#btnEntityGenerate')) {
+            $('#btnEntityGenerate').toggleClass('disabled', !ids.length);
+        } 
+    });
+                    </code></pre>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>框架快速使用</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a href="#">选项1</a>
+                        </li>
+                        <li>
+                            <a href="#">选项2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <h5>通过字典使用</h5>
+                <p>
+                    通过字典适用于设置系统默认值，后续系统也不会经常修改的情况。
+                </p>
+                <p>
+                    获取到字典数据。
+                    <code>
+                        top.getDataDict("NewsType")
+                    </code>
+                    <pre><code>
+                    $("#newsType").ysComboBox({
+                    data: top.getDataDict("NewsType"),
+                    key: "DictKey",
+                    value: "DictValue",
+                    class: "form-control"
+                    });
+                    </code></pre>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    function showNewForm(add) {
+        var url = '/DemoManage/Form/Button';
+        if (add) {
+            createMenuItem(url, "测试按钮");
+        } else {
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+    }
+</script>

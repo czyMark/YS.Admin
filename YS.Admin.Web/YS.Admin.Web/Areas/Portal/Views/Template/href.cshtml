@@ -1,0 +1,95 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/herf.css")" />
+}
+ 
+<div id="app3" class="wrap">
+
+    <div class="con-main-wrap nei">
+        <div class="title"> 友情链接 </div>
+        <div class="item-bg">
+            <div class="titles">以下组织官方评级机构</div>
+            <div class="list flex-row">
+                <a v-for="(item,index) in data.guanfangList" :key="index" :href="item.SiteUrl" target="_blank" class="itemsa">
+                    <img class="img" :src="item.ImgUrl" alt="" />
+                </a>
+            </div>
+        </div>
+        <div class="item-bg">
+            <div class="titles">以下公司认可的评级机构</div>
+            <div class="list flex-row">
+                <a v-for="(item,index) in data.gongsiList" :key="index" :href="item.SiteUrl" target="_blank" class="itemsa">
+                    <img class="img" :src="item.ImgUrl" alt="" />
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectData() {
+
+        alert($("#CertificateNo").val());
+        alert($("#RatingNumberQuery").val());
+    }
+    function bigData() {
+
+        alert($("#BigData").val());
+    }
+
+
+
+    const App3 = {
+        data() {
+            return {
+                query: {
+                    total: 1000,
+                    page: 1,
+                    size: 10
+                },
+                data: {
+                    guanfangList: @Html.Raw(@ViewBag.guanfangList),
+                    gongsiList: @Html.Raw(@ViewBag.gongsiList)
+                    }
+            }
+
+        },
+        methods: {
+
+        },
+        mounted() {
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

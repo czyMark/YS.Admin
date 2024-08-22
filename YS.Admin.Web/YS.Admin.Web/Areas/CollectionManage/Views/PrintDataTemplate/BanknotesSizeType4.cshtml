@@ -1,0 +1,254 @@
+﻿
+<title>打印硬币</title>
+
+<script src="~/lib/jquery/2.1.4/jquery.js"></script>
+<script src="~/lib/qrcode/jquery.qrcode.min.js"></script>
+
+<style type="text/css">
+    * {
+        padding: 0;
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+        background-color: #606060
+    }
+
+
+    .label-box {
+        width: 46mm;
+        height: 48mm;
+        margin: 0 auto;
+        background: #fff;
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+
+    .label-list {
+        width: 46mm;
+        height: 100%;
+        margin: 0 auto;
+        clear: both;
+        overflow: hidden;
+    }
+
+    .item {
+        width: 48mm;
+        height: 24mm;
+        background: #fff; /* 修改查看的颜色 */
+        float: left;
+    }
+
+        .item .tr_0 {
+            float: left;
+            width: 16.5mm;
+            height: 100%;
+        }
+
+
+        .item .tr_m1 {
+            float: left;
+            width: 24mm;
+            height: 100%;
+            margin-top: 2.7mm;
+        }
+
+        .item .tr_1 {
+            float: left;
+            width: 5.5mm;
+        }
+
+
+    .itemback {
+        width: 46mm;
+        height: 24mm;
+        background: #f0f0f0; /* 修改查看的颜色 */
+        float: left;
+        transform: scaleY(-1);
+        /* 可选：处理内联元素的垂直居中问题 */
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+        .itemback .tr_backl2 {
+            margin-top: 3mm;
+            float: right;
+            width: 13.2mm;
+            height: 100%;
+        }
+
+
+
+    .verfiycode {
+        width: 10mm;
+        height: 10.5mm;
+    }
+
+    .verfiycode-text {
+        font-size: 5pt;
+        color: #000;
+        font-weight: bold;
+        font-family: 思源宋体;
+    }
+
+    .content-area {
+        text-align: left;
+    }
+
+    .content-areaA {
+        text-align: left;
+        font-size: 8pt;
+        font-family: "思源宋体Regular";
+        color: #000;
+    }
+
+    .content-areaB {
+        font-size: 8pt;
+        font-family: "思源宋体Heavy";
+        font-weight: bold;
+        color: #000;
+        text-align: right;
+        margin-right: 8.7mm;
+        margin-top: 1mm;
+    }
+
+    .content-areaC {
+        text-align: left;
+        font-size: 8pt;
+        font-family: "思源宋体Regular";
+        color: #000;
+        text-align: center;
+    }
+
+    .content-areaD {
+        font-size: 8pt;
+        font-family: "思源宋体Regular";
+        color: #000;
+        text-align: center;
+    }
+
+    .OS {
+        width: 6.2mm;
+        height: 4.4mm;
+    }
+</style>
+
+
+
+<body id="bodycontent">
+</body>
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var id = urlParams.get('id'); // 获取id参数
+        $.ajax({
+            url: "GetPrintTempPageListJson?Id=" + id + "",
+            method: 'GET',
+            success: function (obj) {
+                if (obj.Tag == 1) {
+
+                    var htmlstr = '', pagehtml = '', rowhtml = '';
+                    var backrowhtml = '';
+
+                    var tlength = obj.Data.length;
+                    obj.Data.forEach(function (item) {
+
+                        pagehtml = '<div class="label-box" ><div class="label-list" >';
+
+                        rowhtml += '<div class="item">';
+                        backrowhtml += '<div class="itemback">';
+
+
+
+                        //正面
+                        rowhtml += '<div class="tr_0"></div><div class="tr_m1"><div class="content-area"><div class="content-areaA"><span class="CollectionName">';
+                        if (item.CollectionName != null)
+                            rowhtml += item.CollectionName;
+
+                        rowhtml += '</span></div><div class="content-areaB"><span class="Rating">';
+                        if (item.Rating != null)
+                            rowhtml += item.Rating;
+                        rowhtml += '</span></div><div class="content-areaC"><span class="Material">';
+                        if (item.Material != null)
+                            rowhtml += item.Material;
+                        rowhtml += '</span>&nbsp;&nbsp;<span class="Size">';
+                        if (item.Size != null)
+                            rowhtml += item.Size;
+                        rowhtml += '</span></div><div class="content-areaD"><span class="CollectionYear">';
+                        if (item.CollectionYear != null)
+                            rowhtml += item.CollectionYear;
+                        rowhtml += '</span>&nbsp;&nbsp;<span class="CollectionValue">';
+                        if (item.CollectionValue != null)
+                            rowhtml += item.CollectionValue;
+                        rowhtml += '</span></div></div></div><div class="tr_1"></div></div>';
+
+
+                        //反面
+                        backrowhtml += '<div class="tr_backl2" ><div style="display: flex;flex-direction: column;" ><div class="verfiycode IDCode" lang="' +
+                            item.IDCode
+                            + '" > </div><div ><span class="verfiycode-text IDCode" >';
+                        if (item.IDCode != null)
+                            backrowhtml += item.IDCode;
+                        backrowhtml += '</span></div></div></div></div>';
+
+
+                        htmlstr += pagehtml + rowhtml + backrowhtml + '</div></div>';
+                        pagehtml = '';
+                        rowhtml = '';
+
+                        backrowhtml = '';
+
+                    });
+                    //赋值到body中,里面生效
+                    $("#bodycontent").html(htmlstr);
+                    $(".verfiycode").each(function (index) {
+                        var _this = $(this);
+                        var _lang = _this.attr("lang");//证书标号
+                        var _url = "https://www.gzpm010.com/jdjg/" + _lang;
+                        _this.qrcode({
+                            width: 40, //宽度
+                            height: 40, //高度
+                            text: _url
+                        })
+                    });
+
+                    //生成样式
+
+                    $.ajax({
+                        url: "GetPrintStylePropListJson?StyleId=" + obj.Data[0].PrintStyleID + "",
+                        method: 'GET',
+                        success: function (obj) {
+                            if (obj.Tag == 1) {
+                                //查询所有的样式
+                                obj.Data.forEach(function (item) {
+                                    $("." + item.StylePropElement + "").each(function (index) {
+                                        var _this = $(this);
+                                        var cssstr = "";
+                                        _this.css({
+                                            'color': item.StylePropColor,
+                                            'font-family': item.StylePropFontFamily,
+                                            'font-size': item.StylePropFontSize
+                                        });
+                                    });
+                                });
+                            }
+                            else {
+                                alert("样式加载错误！");
+                            }
+                        }
+                    });
+                } else {
+                    alert("数据加载错误");
+                }
+            },
+            error: function (xhr, status, error) {
+                alert(error);
+            }
+        });
+    });
+</script>

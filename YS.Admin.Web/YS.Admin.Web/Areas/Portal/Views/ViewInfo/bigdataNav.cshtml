@@ -1,0 +1,124 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/bigdataNav.css")" />
+}
+
+
+
+<div id="app3" class="wrap">
+
+ @*    <div class="findbox">
+        <div class="fbindxiao">
+
+            <img src="/images/Search.png" alt="" class="iconfind">
+            <input type="text" class="input"  id="keyData" placeholder="搜索证书编码和关键词">
+            <button v-on:click="bigData()">
+                <text type="primary" class="" selectable="false" space="false" decode="false">
+                    查询
+                </text>     
+            </button>
+
+        </div>
+    </div> *@
+    <div class="search-wrap con-main-wrap" ref="searchSection">
+
+        @if (ViewBag.tableList != null)
+        {
+            <div class="waibox" v-for="(item,index) in data.showList" :key="index">
+                <div class="box">
+                    <text class="title" selectable="false" space="false" decode="false">
+                        {{item.CategoryName}}
+                    </text>
+                </div>
+                <div class="main">
+                    <div class="main-shuju" v-for="(item1,index1) in item.TagList" :key="index1" v-on:click="findData(item1.TagName1+item1.TagName2)">
+                        <text class="title" selectable="false" space="false" decode="false">
+                             {{item1.TagName1}}{{item1.TagName2}}
+                        </text>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+
+<script>
+
+    const App3 = {
+        data() {
+            return {
+                data: { 
+                    showList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.tableList))
+                  }
+            }
+        },
+        methods: {
+            bigData(){
+                var keyData = $("#keyData").val();
+                this.data.showList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.tableList));
+                if (keyData.length == 0)
+                {
+                }
+                else if (keyData.length == 12 && !isNaN(keyData)) {
+                    //有可能是编码 需要添加更多的规则
+                    //直接跳转到证书界面
+                }else
+                { 
+                    //筛选数据
+                    //tableList的子项目，如果子项不包含keyData就 不往showList中添加
+                    this.data.showList = this.data.showList.filter(item => {
+                        // 过滤TagList，只保留包含keyData的标签
+                        let filteredTagList = item.TagList.filter(tag => (tag.TagName1 + tag.TagName2).includes(keyData) || keyData=="");
+
+                        // 如果filteredTagList不为空，或者tagName1和tagName2都不包含keyData，才返回item
+                        if (filteredTagList.length > 0 ) {
+                            // 更新item的TagList为过滤后的TagList
+                            item.TagList = filteredTagList;
+                            return item; // 返回更新后的item
+                        }
+
+                        // 如果条件不满足，不包含该item
+                    }).filter(item => item);
+
+
+                    // this.data.tableList.filter(item => {
+
+                    //     if (!item.TagList || item.TagList.length === 0) {
+                    //         return true; // 如果TagList为空，直接包含该项
+                    //     }
+
+                    //     // 检查TagList中是否同时不包含tagName1和tagName2
+                    //     let hasTagName1 = item.TagList.some(tag =>  tag.TagName1.includes(keyData));
+                    //     let hasTagName2 = item.TagList.some(tag => tag.TagName2.includes(keyData));
+                    //     // 如果tagName1和tagName2都不包含keyData，则返回true，将该子项包含在showList中
+                    //     return hasTagName1 || hasTagName2;
+                    // }); 
+
+                }
+            }
+            , findData(TagName) {
+
+                window.open("~/Portal/Viewinfo/bigdata?TagName=" + TagName, '_self')
+            }
+        },
+        mounted() {
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

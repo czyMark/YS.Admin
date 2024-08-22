@@ -1,0 +1,342 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/ratingCertificate.css")" />
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+}
+
+<div id="app3" class="wrap">
+
+    <div class="element-wrap">
+
+        <div class="con-main-wrap" id="poster" style="position: absolute; z-index: -99">
+            <img class="header-bg" crossorigin="anonymous" src="/images/pingji/header-pc.png" alt="" />
+            <div class="cen-wrap copy">
+                <div class="left">
+                    <div class="goods-img flex-row">
+                        <img class="goods-img-item" crossorigin="anonymous" :src="data.swiperList[0]" alt="" />
+                    </div>
+                    <div class="list">
+                        <img class="shang" crossorigin="anonymous" src="/images/goods/swiper-left.png" alt="" />
+                        <el-carousel indicator-position="none" ref="carousel" :autoplay="false" arrow="always"
+                                     :style="{ height: 64 + 'px',width:'461px' }">
+                            <el-carousel-item class="xin" :style="{ height: 64 + 'px',width:'461px' }"
+                                              v-for="(item,index) in data.swiperList" :key="index">
+                                <img v-for="(i,iIndex) in item" :key="iIndex" class="goods-img-item" :src="i"
+                                     alt="" />
+                            </el-carousel-item>
+                        </el-carousel>
+                        <img class="xia" crossorigin="anonymous" src="/images/goods/swiper-right.png" alt="" />
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="info-item flex-row" v-for="(item,index) in data.goodsInfo" :key="index"
+                         :class="index%2!=0 ? 'active' :'' ">
+                        <div class="titles">{{item.title}}</div>
+                        <div class="label">{{item.label}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="times">
+                评级日期:@ViewBag.ratingdate
+                <img src="@ViewBag.seal" crossorigin="anonymous" alt="" />
+            </div>
+            <div class="cen-box flex-row copy-box">
+                <div class="btns flex-row" v-on:click="copyGoodsInfo">
+                    <img src="/images/goods/fuzhi.png" crossorigin="anonymous" alt="" /> 复制内容
+                </div>
+                <div class="btns flex-row" v-on:click="takeScreenshot()">
+                    <img src="/images/goods/baocun.png" crossorigin="anonymous" alt="" /> 保存证书
+                </div>
+            </div>
+        </div>
+        <div class="con-main-wrap">
+            <img class="header-bg" src="/images/pingji/header-pc.png" alt="" />
+            <div class="cen-wrap flex-row">
+                <div class="left">
+                    <div class="goods-img flex-row">
+                        <div class="block text-center" m="t-4">
+                            <el-carousel ref="carouselRef" indicator-position="none" arrow interval="3000"
+                                         style="width:500px;height:500px">
+                                <div v-for="(item,index) in data.swiperList" :key="index">
+                                    <el-carousel-item v-for="(i,iIndex) in item" :key="iIndex">
+                                        <img v-if="imgurlyrue == true" style="width: 100%;height: 100%;" :src="i"
+                                             alt="">
+                                        <img v-else style="width: 100%;height: 100%;" :src="imgurl"
+                                             alt="">
+                                    </el-carousel-item>
+                                </div>
+                            </el-carousel>
+                        </div>
+                    </div>
+                    <div class="list">
+                        <img class="shang" v-on:click="prevPage(1)" src="/images/goods/swiper-left.png" alt="" />
+                        <el-carousel indicator-position="none" ref="carousel" :autoplay="false" arrow="always"
+                                     :style="{ height: 64 + 'px',width:'461px' }">
+                            <el-carousel-item style="background-color: #fff;" class="xin"
+                                              :style="{ height: 64 + 'px',width:'461px' }" v-for="(item,index) in data.swiperList"
+                                              :key="index">
+                                <img style="margin-left: 10px;" v-on:click="img(index,iIndex)" v-for="(i,iIndex) in listdata" :key="iIndex"
+                                     class="goods-img-item" :src="i" alt="" />
+                                <!-- <img v-on:click="setActiveItem(1)" v-for="(i,iIndex) in listdata" :key="iIndex"
+                                    class="goods-img-item" :src="i" alt="" /> -->
+                            </el-carousel-item>
+                        </el-carousel>
+                        <img class="xia" v-on:click="nextPage(1)" src="/images/goods/swiper-right.png" alt="" />
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="info-item flex-row" v-for="(item,index) in data.goodsInfo" :key="index"
+                         :class="index%2!=0 ? 'active' :'' ">
+                        <div class="titles">{{item[0]}}</div>
+                        <div class="label">{{item[1]}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="times">
+                评级日期:@ViewBag.ratingdate
+                <img src="@ViewBag.seal" crossorigin="anonymous" alt="" />
+            </div>
+            <div class="cen-box flex-row">
+                <div class="btns flex-row" v-on:click="copyGoodsInfo">
+                    <img src="/images/goods/fuzhi.png" alt="" /> 复制内容
+                </div>
+                <div class="btns flex-row" v-on:click="takeScreenshot()">
+                    <img src="/images/goods/baocun.png" alt="" /> 保存证书
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="all">
+        <div class="title">统计</div>
+        <div class="cate-title flex-row">
+            <div class="item flex-col" :class="selectTable=='评分统计'?'active':''" v-on:click="changeTable('评分统计')">
+                评分统计
+                <img src="/images/goods/select.png" alt="" />
+            </div>
+            <div class="item flex-col" v-on:click="changeTable('版别统计')" :class="selectTable=='版别统计'?'active':''">
+                版别统计
+                <img src="/images/goods/select.png" alt="" />
+            </div>
+        </div>
+        <div class="tables" v-if="selectTable === '评分统计'">
+            <el-table :data="data.tableData" stripe border
+                      style="width: 1183px; height: 549px; overflow: auto; text-align: center">
+                <el-table-column prop="Rating" label="评分" width="150" header-align="center"
+                                 align="center"></el-table-column>
+                <el-table-column prop="Total" label="总量" width="150" header-align="center"
+                                 align="center"></el-table-column>
+                <el-table-column prop="NewDataCount" label="当月新增" width="150" header-align="center"
+                                 align="center"></el-table-column>
+            </el-table>
+        </div>
+        <div class="tables" v-if="selectTable === '版别统计'">
+            <el-table border :data="generateBanbieData()" stripe
+                      style="width: 1183px; height: 549px; overflow: auto; text-align: center">
+                <el-table-column v-for="(item, index) in data.cateList" :key="index" :label="item"
+                                 :prop="`column${index}`" header-align="center" align="center"
+                                 >
+
+
+                </el-table-column>
+            </el-table>
+        </div> 
+        <div class="btn" on:click="saveStatistics"> 保存统计 </div>
+    </div>
+</div>
+
+<script>
+
+
+    const App3 = {
+        data() {
+            return {
+                query: {
+                    total: 1000,
+                    page: 1,
+                    size: 10
+                },
+                selectSwiperImg: '',
+                selectTable: '评分统计',
+                data: {
+                    swiperList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.swiperList)),
+                    cateList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.cateList)),
+                    cateTotalList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.cateTotalList)),
+                    goodsInfo: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.goodsInfo)),
+                    tableData: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.tableData))
+                        },
+                indexs: 0,
+                indexss: 1,
+                listdata: [],
+                page: 0,
+                indesk: 0,
+                imgurl: '',
+                imgurlyrue: true
+            };
+
+        },
+
+        created() {
+            this.listdata = this.data.swiperList[0]
+            console.log(this.listdata);
+
+        },
+        mounted() {
+            this.listdata = this.data.swiperList[0]
+        },
+        watch: {
+
+        },
+        updated() {
+
+        },
+        methods: {
+            img(index, Index) {
+                let timmr;
+                this.indesk = Index
+                this.imgurlyrue = false
+                this.imgurl = this.data.swiperList[this.indexs][Index]
+
+                setTimeout(() => {
+                    this.imgurlyrue = true
+                    clearTimeout(timmr)
+                    this.$forceUpdate()
+                }, 2000)
+            },
+            nextPage(index) {
+                if (this.data.swiperList.length - 1 > this.indexs) {
+                    this.indexs++;
+                    this.page = this.indexs
+                    console.log(this.indexs, this.page);
+                    if (this.indexs - 1 == 0) {
+                        this.listdata = this.data.swiperList[1]
+                    } else {
+                        console.log('1111');
+                        this.listdata = this.data.swiperList[this.indexs]
+                    }
+                    console.log(this.listdata)
+                } else {
+
+                }
+
+            },
+            prevPage(index) {
+                if (this.page <= this.data.swiperList.length - 1 && this.page != 0) {
+                    this.page--;
+                    this.indexs--;
+                    this.listdata = this.data.swiperList[this.page]
+                }
+
+            },
+            calculateColumnWidth(index) {
+                // 根据索引设置列宽，可以根据需要调整
+                const widths = [
+                    160, 80, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60,
+                    60, 100
+                ];
+                return widths[index] || 100;
+            },
+            generateBanbieData() {
+                const rows = this.data.cateTotalList.length // Number of rows to generate
+                return Array.from({ length: this.data.cateTotalList.length }, (_, rowIndex) => {
+                    const rowData = {};
+                    this.data.cateList.forEach((cate, colIndex) => {
+                        rowData[`column${colIndex}`] = this.data.cateTotalList[rowIndex][colIndex];
+                        // `${rowIndex}${colIndex}`;
+                    });
+                    return rowData;
+                });
+            },
+
+            async copyGoodsInfo() {
+                try {
+                    const goodsInfoValues = this.data.goodsInfo
+                        .map((item) => Object.values(item))
+                        .flat();
+                    const goodsInfoString = goodsInfoValues.join(', ');
+                    await navigator.clipboard.writeText(goodsInfoString);
+                    ElementPlus.ElMessage.success('复制成功');
+                } catch (err) { }
+            },
+
+            changeTable(item) {
+                this.selectTable = item;
+            },
+            //满哥 报了跨域错误
+            takeScreenshot() {
+                const carousel = document.querySelector('.list');
+                const cenBox = document.querySelector('.cen-box.flex-row');
+                carousel.style.display = 'none';
+                cenBox.style.display = 'none';
+
+                const poster = document.getElementById('poster');
+                html2canvas(poster).then((canvas) => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.href = imgData;
+                    link.download = 'poster.png';
+                    link.click();
+                    carousel.style.display = '';
+                    cenBox.style.display = '';
+                });
+            },
+            saveStatistics() {
+                // 获取需要隐藏的按钮
+                const btn = document.querySelector('.btn');
+
+                // 隐藏按钮
+                btn.style.display = 'none';
+
+                // 生成截图
+                const poster = document.querySelector('.all');
+                html2canvas(poster).then((canvas) => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.href = imgData;
+                    link.download = 'statistics.png';
+                    link.click();
+
+                    // 恢复按钮的显示状态
+                    btn.style.display = '';
+                });
+            }
+        },
+        mounted() {
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

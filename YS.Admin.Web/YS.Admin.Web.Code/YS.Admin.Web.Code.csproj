@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\YS.Admin.Cache\YS.Admin.Cache.Factory\YS.Admin.Cache.Factory.csproj" />
+    <ProjectReference Include="..\..\YS.Admin.Data\YS.Admin.Data.Repository\YS.Admin.Data.Repository.csproj" />
+    <ProjectReference Include="..\..\YS.Admin.Util\YS.Admin.Util\YS.Admin.Util.csproj" />
+  </ItemGroup>
+  
+</Project>

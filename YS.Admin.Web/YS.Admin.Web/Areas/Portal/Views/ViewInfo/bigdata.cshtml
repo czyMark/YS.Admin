@@ -1,0 +1,106 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_Layout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/dashuju.css")" />
+}
+
+<div id="app3" class="wrap">
+    <div class="con-main-wrap nei">
+        <div class="title"> 大数据统计 </div>
+        @* <div class="title-top flex-row">
+        <div class="item" v-for="(item,index) in data.cateList" :key="index" :class="index==0?'first':''  ">
+        {{item}}
+        </div>
+        </div>
+        <div class="table-value-list xinde">
+        <div class="item flex-row" v-for="(subList, subIndex) in data.cateTotalList" :key="subIndex">
+        <div class="item-item first"> {{ subList[0] }}  </div>
+        <div class="item-item" v-for="number in subList.slice(1)" :key="subIndex + '-' + number"> {{ number  }}  </div>
+        </div>
+        </div> *@
+
+        <el-table border :data="generateBanbieData()" stripe v-show="data.cateList.length>1">
+            <el-table-column v-for="(item, index) in data.cateList" :key="index" :label="item"
+                             :prop="`column${index}`" header-align="center" align="center">
+
+
+            </el-table-column>
+        </el-table>
+
+
+
+
+    </div>
+
+</div>
+
+<script>
+
+
+    const App3 = {
+        data() {
+            return {
+                data: {
+                    cateList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.cateList)),
+                    cateTotalList: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.cateTotalList))
+                    }
+            }
+
+        },
+        methods: {
+
+            calculateColumnWidth(index) {
+                // 根据索引设置列宽，可以根据需要调整
+                const widths = [
+                    160, 80, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60,
+                    60, 100
+                ];
+                return widths[index] || 100;
+            },
+            generateBanbieData() {
+                const rows = this.data.cateTotalList.length // Number of rows to generate
+                return Array.from({ length: this.data.cateTotalList.length }, (_, rowIndex) => {
+                    const rowData = {};
+                    this.data.cateList.forEach((cate, colIndex) => {
+                        rowData[`column${colIndex}`] = this.data.cateTotalList[rowIndex][colIndex];
+                        // `${rowIndex}${colIndex}`;
+                    });
+                    return rowData;
+                });
+            },
+        },
+        mounted() {
+            cx();
+            window.addEventListener('resize', function () {
+                cx();
+            });
+            function cx() {
+                var Wth = document.documentElement.clientWidth;
+                var app = document.querySelector('#app3');
+                if (Wth < 1400) {
+                    if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    } else {
+                        document.documentElement.style.zoom = (Wth / 1250) * 100 + '%';
+                    }
+                } else {
+                    // app.style.width = '100%';
+                    document.documentElement.style.zoom = '100%';
+                }
+            }
+        },
+        beforeUnmount() {
+
+        },
+        components: {}
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

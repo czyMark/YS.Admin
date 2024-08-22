@@ -1,0 +1,56 @@
+﻿@{
+    Layout = null;
+}
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column" id="msg">
+          
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/2.1.4/jquery.js"></script>
+<script>
+    let rsaHost = 'http://localhost:5000';
+    $(function () {
+      
+    })
+
+    //  生成秘钥
+    function generateKeyPair() {
+      
+    }
+
+    // 加密
+    function encrypt() {
+      
+    }
+
+    // 解密
+    function decrypt() {
+      
+    }
+</script>
+
+
+<script>
+
+    // 创建signalR连接
+    var connection = new signalR.HubConnectionBuilder().withUrl(@Url.Content("/SignalRHup")).build();
+
+    // 接收到  ReceiveEncrypt 的消息
+    connection.on("ReceiveMessage", function (userId, message) {
+        console.log(userId);
+        $("#msg").html(message);
+        console.log(message); 
+    });
+     
+
+    // 连接成功
+    connection.start().then(function () {
+        console.log("Connection Success")
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+</script>

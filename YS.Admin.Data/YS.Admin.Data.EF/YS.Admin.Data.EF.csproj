@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Database\OracleDatabase.cs" />
+    <Compile Remove="DbContext\OracleDbContext.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+
+    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="6.102.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\YS.Admin.Util\YS.Admin.Util\YS.Admin.Util.csproj" />
+    <ProjectReference Include="..\YS.Admin.Data\YS.Admin.Data.csproj" />
+  </ItemGroup>
+  
+</Project>

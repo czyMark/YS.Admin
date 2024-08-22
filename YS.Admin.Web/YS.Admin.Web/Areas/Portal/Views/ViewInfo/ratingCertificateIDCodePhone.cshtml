@@ -1,0 +1,109 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@{
+    Layout = "~/Areas/Portal/Views/Shared/_DetailLayout.cshtml";
+
+}
+
+@section header {
+
+    <link rel="stylesheet" href="@Url.Content("~/css/goodsPhone.css")" />
+}
+
+<div id="app3" class="wrap">
+
+    <div class="element-wrap">
+        <div class="cen-wrap">
+            <el-carousel height="21.91em" ref="slideCarousel">
+                <el-carousel-item v-for="(item,index) in data.swiperList" :key="index">
+                    <img :src="item" alt="" />
+                </el-carousel-item>
+            </el-carousel>
+        </div>
+        <div class="right">
+            <div class="info-item flex-row"
+                 v-for="(item,index) in data.goodsInfo" :key="index"
+                 :class="index%2!=0 ? 'active' :'' ">
+                <div class="titles">{{item.title}}</div>
+                <div class="label">{{item.label}}</div>
+            </div>
+        </div>
+        <div class="times">
+            评级日期:@ViewBag.ratingdate
+            <img src="@ViewBag.seal" crossorigin="anonymous" alt="" />
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    const App3 = {
+        data() {
+            return {
+                query: {
+                    total: 1000,
+                    page: 1,
+                    size: 10
+                },
+                slideCarousel: null,
+                selectSwiperImg: '',
+                data: {
+                    swiperList: @Html.Raw(@ViewBag.swiperList),
+                    goodsInfo: @Html.Raw(@ViewBag.goodsInfo) 
+                }
+            }
+        },
+        methods: {
+            // 滑动切换
+            slideBanner() {
+                console.log(333);
+                //选中的轮播图
+                var box = document.querySelector('.el-carousel__container');
+                var startPoint = 0;
+                var stopPoint = 0;
+                //重置坐标
+                var resetPoint = function () {
+                    startPoint = 0;
+                    stopPoint = 0;
+                };
+                //手指按下
+                box.addEventListener('touchstart', function (e) {
+                    //手指点击位置的X坐标
+                    startPoint = e.changedTouches[0].pageX;
+                });
+                //手指滑动
+                box.addEventListener('touchmove', function (e) {
+                    //手指滑动后终点位置X的坐标
+                    stopPoint = e.changedTouches[0].pageX;
+                });
+                //当手指抬起的时候，判断图片滚动离左右的距离
+                let that = this;
+                box.addEventListener('touchend', function (e) {
+                    if (stopPoint == 0 || startPoint - stopPoint == 0) {
+                        resetPoint();
+                        return;
+                    }
+                    if (startPoint - stopPoint > 0) {
+                        resetPoint();
+                        that.$refs.slideCarousel.next();
+                        return;
+                    }
+                    if (startPoint - stopPoint < 0) {
+                        resetPoint();
+                        that.$refs.slideCarousel.prev();
+                        return;
+                    }
+                });
+            }
+        },
+        mounted() {
+            this.slideBanner();
+        },
+        beforeUnmount() { }
+    };
+    function app3init() {
+        const app3 = Vue.createApp(App3);
+        app3.use(ElementPlus);
+        app3.mount('#app3');
+    }
+</script>

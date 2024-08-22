@@ -1,0 +1,16 @@
+﻿@model SiteConfigEntity
+
+<div class="footer-box">
+    <footer class="footer center clearfix">
+        <div class="footer-left">
+            <p>版权所有：@Model.WebCompany</p>
+            <p>联系地址：@Model.WebAddress      邮政编码：@Model.WebPost</p>
+            <p>E-mail：@Model.WebEmail       联系电话：@Model.WebPhone       传真电话：@Model.WebFax</p>
+            <p>ICP备案号：@Model.WebCord    京公网安备 @Model.WebPolice</p>
+        </div>
+        <div class="footer-right">
+            <div class="ewm"><img src="@Model.WebWxQCode" alt=""></div>
+            <div class="text">关注公众号<br>了解更多</div>
+        </div>
+    </footer>
+</div>

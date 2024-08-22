@@ -1,0 +1,165 @@
+.styles {
+    width: 10% !important;
+}
+
+.search-wrap {
+    width: 100% !important;
+    display: flex;
+}
+
+.findbox {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    background-color: #f0f4f5;
+}
+
+.findbox .fbindxiao {
+    position: relative;
+    width: 100%;
+    display: flex;
+
+}
+
+.iconfind {
+    position: absolute !important;
+    top: 30%;
+    left: 17.5%;
+    width: 21px;
+    height: 21px;
+}
+
+.findbox .fbindxiao input {
+    width: 1000px;
+    height: 60px;
+    margin-left: 16.5%;
+
+    border: 2px solid #468265;
+    border-radius: 10px;
+    outline: none;
+    padding-left: 60px;
+    font-size: 18px;
+}
+
+
+.search-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-wrap .main {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.waibox {
+    margin-top: 20px;
+}
+
+.search-wrap .main .main-shuju {
+    width: 200px;
+    height: 67px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    border: 1px solid #E3E7E8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-wrap .main .main-shuju .title {
+    font-family: Source Han Sans CN;
+    font-weight: 400;
+    font-size: 18px;
+    color: #232323;
+    word-break: break-all;
+    text-align: left;
+    margin: 10px 10px;
+    pointer-events: none; 
+}
+
+.search-wrap .waibox .box {
+    width: 100% !important;
+}
+
+.search-wrap .waibox .box .title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.findbox .fbindxiao button {
+    color: #fff;
+    width: 118px;
+    height: 60px;
+    background: #447F64;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    border: none;
+    margin-left: 19px;
+    /* 根据需要可以添加或移除这行代码 */
+}
+
+.search-wrap .waibox .main :hover {
+    transform: scale(1.1);
+    background-color: #fff;
+    box-shadow: #ccc 0px 5px 5px;
+}
+
+.search-wrap .waibox .main .main-shuju :hover {
+    transform: scale(1) !important;
+    box-sizing: 0px !important;
+    box-shadow:  0px !important;
+    background-color: #fff !important;
+}
+
+.findbox .fbindxiao button text {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+
+.footer-wrap {
+    padding: 25px 0;
+    background-color: #468265;
+    color: #ffffff;
+}
+
+.footer-wrap .title-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.footer-wrap .title-wrap .title {
+    font-family: Source Han Sans CN;
+    font-size: 28px;
+}
+
+.footer-wrap .title-wrap p {
+    width: 64px;
+    height: 2px;
+    background-color: #fff;
+}
+
+.footer-wrap .label {
+    width: 1146px;
+    margin: 20px auto 0;
+    line-height: 24px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.xiala {
+    margin-left: 10%;
+}
