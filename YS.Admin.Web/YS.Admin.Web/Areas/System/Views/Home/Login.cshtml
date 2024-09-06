@@ -48,7 +48,7 @@
             $("#rememberMe").prop("checked", true);
             if ("@GlobalContext.SystemConfig.LoginProvider" == "Cookie") {
                 if (!ys.isNullOrEmpty($.cookie('UserToken'))) {
-                    redirectToIndex();
+                    redirectToIndex(); //可以扩展成单点登录。 所有的账户统一。
                 }
             }
             else {

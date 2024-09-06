@@ -35,6 +35,7 @@ namespace YS.Admin.Web.Areas.BlogWebsite.Controllers
             return View();
         }
 
+
         [HttpPost]
         public async Task<IActionResult> LoginJson(string userName, string password, string captchaCode)
         {
@@ -87,6 +88,56 @@ namespace YS.Admin.Web.Areas.BlogWebsite.Controllers
             obj.Message = userObj.Message;
             return Json(obj);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CryptoLoginJson(string Crypto)
+        {
+            TData obj = new TData();
+            if (string.IsNullOrEmpty(Crypto))
+            {
+                obj.Message = "无法识别";
+                return Json(obj);
+            }
+            TData<QqUserEntity> userObj = await qqUserBLL.CheckLogin(Crypto);
+
+             //await qqUserBLL.CheckLogin(userName, password, (int)PlatformEnum.Web);
+            if (userObj.Tag == 0)
+            {
+                obj.Message = userObj.Message;
+                return Json(obj);
+            }
+
+            string ip = NetHelper.Ip;
+            string browser = NetHelper.Browser;
+            string os = NetHelper.GetOSVersion();
+            string userAgent = NetHelper.UserAgent;
+
+            Action taskAction = async () =>
+            {
+                LogLoginEntity logLoginEntity = new LogLoginEntity
+                {
+                    LogStatus = userObj.Tag == 1 ? OperateStatusEnum.Success.ParseToInt() : OperateStatusEnum.Fail.ParseToInt(),
+                    Remark = userObj.Message,
+                    IpAddress = ip,
+                    IpLocation = IpLocationHelper.GetIpLocation(ip),
+                    Browser = browser,
+                    OS = os,
+                    ExtraRemark = userAgent,
+                    BaseCreatorId = userObj.Data?.Id
+                };
+
+                // 让底层不用获取HttpContext
+                logLoginEntity.BaseCreatorId = logLoginEntity.BaseCreatorId ?? 0;
+
+                await logLoginBLL.SaveForm(logLoginEntity);
+            };
+            AsyncTaskHelper.StartTask(taskAction);
+            SetLoginCookie(userObj.Data.NickName, userObj.Data.OpenId);
+
+            obj.Tag = userObj.Tag;
+            obj.Message = userObj.Message;
+            return Json(obj);
+        }
         /// <summary>
         /// 第三方登录
         /// </summary>
@@ -114,14 +165,14 @@ namespace YS.Admin.Web.Areas.BlogWebsite.Controllers
 
 
         [HttpPost]
-        public async Task<JsonResult> Logout()
+        public async Task<JsonResult> LogoutJson()
         {
             HttpContext.Response.Cookies.Delete("UserSession");
             HttpContext.Response.Cookies.Delete("openid");
             TData<string> result = new TData<string>();
             result.Tag = 1;
             result.Message = "退出登录成功";
-            return Json(result.Data);
+            return Json(result);
         }
 
         [HttpPost]

@@ -31,7 +31,7 @@
                     <ul>
                         <li><a href="~/BlogWebsite/Home/Index">首页</a></li>
                         <li><a href="~/BlogWebsite/Article/Index">文章</a></li>
-                        <li><a href="~/BlogWebsite/Article/Send">发布文章</a></li>
+                        @* <li><a href="~/BlogWebsite/Article/Send">发布文章</a></li> *@
                         <li><a href="~/BlogWebsite/Feedback/Index">留言</a></li>
                         <li><a href="~/BlogWebsite/Diarys/Index">日记</a></li>
                         <li><a href="~/BlogWebsite/Links/Index">友链</a></li>
@@ -44,7 +44,7 @@
                         登录
                     </a> *@
                     <a href="#" onclick="Login()" class="blog-user">
-                        登录
+                        匿名登录
                     </a>
                 }
                 else
@@ -132,13 +132,13 @@
             $.ajax({
                 url: '@Url.Content("~/BlogWebsite/Account/LogoutJson")',
                 type: 'post',
-                success: function (obj) {
+                success: function (obj) { 
                     if (obj.Tag == 1) {
                         layer.msg(obj.Message, {
                             icon: 1
                         });
                         // 刷新当前页面
-                        setTimeout(function () { window.location.reload(); }, 1000);
+                        setTimeout(function () { window.location.reload(); }, 500);
 
                     }
                     else {
